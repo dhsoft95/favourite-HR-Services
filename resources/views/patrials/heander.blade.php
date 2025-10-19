@@ -1,3 +1,18 @@
+@php
+    $currentRoute = request()->route()->getName();
+    $activeClasses = 'text-red-600 border-b-2 border-red-600';
+    $inactiveClasses = 'text-gray-600 hover:text-red-600 hover:border-b-2 hover:border-red-600 border-b-2 border-transparent';
+
+    // Define which route corresponds to which navigation item
+    $routes = [
+        'home' => '/',
+        'about' => 'about',
+        'solutions' => 'solutions',
+        'jobs' => 'jobs',
+        'contact' => 'contact'
+    ];
+@endphp
+
 <nav class="bg-white shadow-sm">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -5,30 +20,27 @@
             <div class="flex-shrink-0">
                 <a href="/" class="flex items-center">
                     <div class="flex items-center space-x-3">
-                        <!-- Replace placeholder with your actual logo -->
                         <img src="/images/logo/logo.png" alt="Favourite Web Services" class="h-10 w-auto">
                     </div>
                 </a>
             </div>
-            <!-- Navigation Links -->
-
 
             <!-- Desktop Navigation -->
             <div class="hidden lg:block">
                 <div class="flex items-center space-x-8">
-                    <a href="/" class="text-red-600 border-b-2 border-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out">
+                    <a href="/" class="px-3 py-2 text-sm font-medium transition duration-150 ease-in-out {{ request()->is('/') ? $activeClasses : $inactiveClasses }}">
                         Home
                     </a>
-                    <a href="/about" class="text-gray-600 hover:text-red-600 hover:border-b-2 hover:border-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out border-b-2 border-transparent">
+                    <a href="/about" class="px-3 py-2 text-sm font-medium transition duration-150 ease-in-out {{ request()->is('about') ? $activeClasses : $inactiveClasses }}">
                         About Us
                     </a>
-                    <a href="/solutions" class="text-gray-600 hover:text-red-600 hover:border-b-2 hover:border-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out border-b-2 border-transparent">
+                    <a href="/solutions" class="px-3 py-2 text-sm font-medium transition duration-150 ease-in-out {{ request()->is('solutions') ? $activeClasses : $inactiveClasses }}">
                         Our Solutions
                     </a>
-                    <a href="/jobs" class="text-gray-600 hover:text-red-600 hover:border-b-2 hover:border-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out border-b-2 border-transparent">
+                    <a href="/jobs" class="px-3 py-2 text-sm font-medium transition duration-150 ease-in-out {{ request()->is('jobs') ? $activeClasses : $inactiveClasses }}">
                         Jobs
                     </a>
-                    <a href="/contact" class="text-gray-600 hover:text-red-600 hover:border-b-2 hover:border-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out border-b-2 border-transparent">
+                    <a href="/contact" class="px-3 py-2 text-sm font-medium transition duration-150 ease-in-out {{ request()->is('contact') ? $activeClasses : $inactiveClasses }}">
                         Contact Us
                     </a>
                 </div>
@@ -113,19 +125,19 @@
                     <div class="px-4 py-6 space-y-4">
                         <!-- Navigation Links -->
                         <div class="space-y-2">
-                            <a href="/" class="text-red-600 bg-red-50 block px-4 py-3 text-base font-medium rounded-lg" @click="open = false">
+                            <a href="/" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('/') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 Home
                             </a>
-                            <a href="/about" class="text-gray-600 hover:text-red-600 hover:bg-red-50 block px-4 py-3 text-base font-medium rounded-lg transition duration-150" @click="open = false">
+                            <a href="/about" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('about') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 About Us
                             </a>
-                            <a href="/solutions" class="text-gray-600 hover:text-red-600 hover:bg-red-50 block px-4 py-3 text-base font-medium rounded-lg transition duration-150" @click="open = false">
+                            <a href="/solutions" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('solutions') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 Our Solutions
                             </a>
-                            <a href="/jobs" class="text-gray-600 hover:text-red-600 hover:bg-red-50 block px-4 py-3 text-base font-medium rounded-lg transition duration-150" @click="open = false">
+                            <a href="/jobs" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('jobs') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 Jobs
                             </a>
-                            <a href="/contact" class="text-gray-600 hover:text-red-600 hover:bg-red-50 block px-4 py-3 text-base font-medium rounded-lg transition duration-150" @click="open = false">
+                            <a href="/contact" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('contact') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 Contact Us
                             </a>
                         </div>
@@ -187,7 +199,7 @@
                         </div>
 
                         <!-- Mobile Login -->
-                        <a href="/login" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-white bg-indigo-800 hover:bg-indigo-700 transition duration-150" @click="open = false">
+                        <a href="/login" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-white bg-indigo-800 hover:bg-indigo-700 transition duration-150 {{ request()->is('login') ? 'bg-indigo-900' : '' }}" @click="open = false">
                             Login
                         </a>
                     </div>
@@ -195,7 +207,6 @@
             </div>
         </div>
     </div>
-
     <!-- Red line below navigation -->
     <div class="w-full h-1 bg-red-600"></div>
 </nav>

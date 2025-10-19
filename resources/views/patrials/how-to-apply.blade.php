@@ -1,4 +1,4 @@
-<section class="py-16 lg:py-20 bg-gray-900">
+<section class="py-16 lg:py-20 bg-[#151457]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-12 lg:mb-16">
@@ -18,9 +18,7 @@
                     <div class="text-center">
                         <div class="flex justify-center mb-6">
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-300">
-                                <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
+                                <i class="fas fa-user text-2xl text-gray-600"></i>
                             </div>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">
@@ -35,9 +33,7 @@
                     <div class="text-center">
                         <div class="flex justify-center mb-6">
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-300">
-                                <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 002 2M8 6V4H6a2 2 0 00-2 2v2m0 0v8a2 2 0 002 2h2M8 18v-2a2 2 0 00-2-2H4a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2z"/>
-                                </svg>
+                                <i class="fas fa-briefcase text-2xl text-gray-600"></i>
                             </div>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">
@@ -52,9 +48,7 @@
                     <div class="text-center">
                         <div class="flex justify-center mb-6">
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-300">
-                                <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
+                                <i class="fas fa-file-alt text-2xl text-gray-600"></i>
                             </div>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">
