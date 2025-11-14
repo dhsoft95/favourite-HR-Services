@@ -236,10 +236,10 @@
                             </div>
 
                             <div class="flex gap-2">
-                                <button class="flex-1 bg-[#2A2D5A] text-white py-2 px-3 rounded-lg hover:bg-[#1f2347] transition-colors duration-300 text-sm font-medium flex items-center justify-center">
+                                <a href="{{ route('jobs-details') }}" class="flex-1 bg-[#2A2D5A] text-white py-2 px-3 rounded-lg hover:bg-[#1f2347] transition-colors duration-300 text-sm font-medium flex items-center justify-center">
                                     View Job Details
                                     <i class="fas fa-chevron-right ml-1"></i>
-                                </button>
+                                </a>
                                 <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300">
                                     <i class="far fa-bookmark text-gray-600"></i>
                                 </button>
