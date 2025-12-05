@@ -6,10 +6,10 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative h-[400px] overflow-hidden">
+    <section class="relative h-[450px] overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-             style="background-image: url('/images/solutions/solutions-bg.png');">
-            <div class="absolute inset-0 bg-black/70"></div>
+             style="background-image: url('/images/solutions/solutions-bg.webp');">
+            <div class="absolute inset-0 bg-black/40"></div>
         </div>
 
         <div class="relative h-full">
@@ -20,7 +20,7 @@
                             Our Solutions
                         </h1>
                         <p class="text-xl lg:text-2xl text-white/90 leading-relaxed">
-                            Comprehensive HR solutions that drive organizational excellence
+                            Comprehensive HR services designed to support your people, strengthen your organization, and drive sustainable growth.
                         </p>
                     </div>
                 </div>

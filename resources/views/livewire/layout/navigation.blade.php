@@ -29,9 +29,7 @@ new class extends Component
                         <div class="flex items-center space-x-3">
                             <img src="/images/logo/logo.png" alt="Favourite Web Services" class="h-10 w-auto">
                         </div>
-{{--                        <span class="text-xl font-bold text-gray-900 group-hover:text-red-600 transition-colors">--}}
-{{--                            {{ config('app.name', 'Laravel') }}--}}
-{{--                        </span>--}}
+
                     </a>
                 </div>
 
