@@ -36,13 +36,16 @@ class PagesController extends Controller
             'title' => 'Jobs - Favourite Web Services',
             'activePage' => 'jobs'
         ]);
-    }    public function jobsDetails()
-    {
-        return view('pages.job-detaild', [
-            'title' => 'Jobs - Favourite Web Services',
-            'activePage' => 'jobs'
-        ]);
     }
+
+        public function jobsDetails($id)  // This parameter name must match the route
+        {
+            return view('pages.job-details', [
+                'title' => 'Job Details - Favourite Web Services',
+                'activePage' => 'jobs',
+                'jobId' => $id
+            ]);
+        }
 
     public function contact()
     {
@@ -63,14 +66,6 @@ class PagesController extends Controller
 
         return back()->with('success', 'Thank you for your message! We will get back to you soon.');
     }
-
-//    public function login()
-//    {
-//        return view('auth.login', [
-//            'title' => 'Login - Favourite Web Services',
-//            'activePage' => 'login'
-//        ]);
-//    }
 
     public function search(Request $request)
     {

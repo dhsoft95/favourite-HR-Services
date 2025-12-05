@@ -1,231 +1,496 @@
-<section class="relative w-full h-[700px] overflow-hidden hero-bg" style="top: 1px;">
-    <!-- Background Image with Overlay -->
-    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-         style="background-image: url('/images/Hero/hero.jpg');">
-        <!-- Dark Overlay for better text readability -->
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-    </div>
+<section class="relative w-full h-[75vh]">
+    <style>
+        :root {
+            --primary-navy: #1a2332;
+            /*--accent-gold: #D2232A;*/
+            --text-light: #f8fafc;
+            --text-muted: #cbd5e1;
+            /*--overlay: rgba(26, 35, 50, 0.6);*/
+        }
 
-    <!-- Decorative Orange Gradient -->
-    <div class="absolute top-0 right-0 w-1/3 h-full">
-        <div class="w-full h-full bg-gradient-to-l from-orange-400 via-orange-300 to-transparent opacity-20"></div>
-    </div>
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: all 800ms ease-in-out;
+            transform: scale(1.02);
+        }
 
-    <!-- Content Container -->
-    <div class="relative z-10 flex flex-col justify-between h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Hero Content -->
-        <div class="flex items-center flex-1">
-            <div class="w-full lg:w-1/2 text-center lg:text-left">
-                <!-- Main Heading -->
-                <h1 class="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-4 lg:mb-6">
-                    <span class="hero-text">Elevate Your Team</span>
-                    <br>
-                    <span class="hero-text">Expert Staffing For</span>
-                    <br>
-                    <span class="hero-text">Solutions Success</span>
-                </h1>
+        .hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-                <!-- Subtitle -->
-                <p class="text-base sm:text-lg lg:text-xl text-gray-200 mb-6 lg:mb-8 max-w-md lg:max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                    With a relentless dedication to excellence specialize connecting
-                    top-tier talent with leading companies, creating synergies drive.
-                </p>
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--overlay);
+            z-index: 1;
+        }
 
-                <!-- CTA Button -->
-                <div class="flex justify-center lg:justify-start">
-                    <a href="/about"
-                       class="inline-flex items-center px-6 lg:px-8 py-3 lg:py-4 border-2 border-white text-white font-medium text-base lg:text-lg hover:bg-white hover:text-gray-900 transition duration-300 ease-in-out group">
-                        Learn more
-                        <svg class="ml-2 lg:ml-3 w-4 lg:w-5 h-4 lg:h-5 transform group-hover:translate-x-1 transition-transform duration-200"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 3.5rem);
+            line-height: 1.1;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            line-height: 1.5;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .cta-button {
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--text-light);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 300ms ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--text-light);
+            transform: translateX(-100%);
+            transition: transform 300ms ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            transform: translateX(0);
+        }
+
+        .cta-button:hover {
+            color: var(--primary-navy);
+        }
+
+        .cta-button svg {
+            margin-left: 0.5rem;
+            transition: transform 300ms ease;
+        }
+
+        .cta-button:hover svg {
+            transform: translateX(3px);
+        }
+
+        .slider-navigation {
+            position: absolute;
+            bottom: 8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+            z-index: 20;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid transparent;
+            transition: all 250ms ease;
+            cursor: pointer;
+        }
+
+        .slider-dot.active {
+            background: var(--text-light);
+            border-color: var(--accent-gold);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 250ms ease;
+            z-index: 20;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .slider-arrow.prev { left: 1rem; }
+        .slider-arrow.next { right: 1rem; }
+
+        .search-form {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(50%);
+            z-index: 30;
+            padding: 0 1rem;
+        }
+
+        .search-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--primary-navy);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-select {
+            font-family: 'Inter', sans-serif;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 200ms ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-navy);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        .search-button {
+            font-family: 'Inter', sans-serif;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-navy);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+
+        .search-button:hover {
+            background: #0f172a;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-wrapper {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .hero-content {
+                text-align: center;
+                padding: 0 0.75rem;
+            }
+
+            .slider-arrow {
+                display: none;
+            }
+
+            .slider-navigation {
+                bottom: 6rem;
+            }
+
+            .search-container {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .search-form {
+                transform: translateY(40%);
+            }
+
+            .hero-title {
+                margin-bottom: 0.75rem;
+            }
+
+            .hero-subtitle {
+                margin-bottom: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-form {
+                transform: translateY(35%);
+            }
+
+            .search-container {
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+            }
+        }
+    </style>
+
+    <!-- Slider Container -->
+    <div class="hero-slider relative w-full h-full">
+        <!-- Slide 1 -->
+        <div class="hero-slide active" style="background-image: url('/images/Hero/slider-01.webp');">
+            <div class="hero-content">
+                <div class="content-wrapper max-w-xl">
+                    <h1 class="hero-title">
+                        Build Your Team With<br>
+                        <span style="color: var(--accent-gold);">Trusted Staffing Experts</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        We connect top talent with leading companies, helping you grow stronger teams and achieve lasting success.
+                    </p>
+                    <a href="/about" class="cta-button">
+                        Learn More
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                         </svg>
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Right side space for background image -->
-            <div class="hidden lg:block lg:w-1/2">
-                <!-- This space is reserved for the woman image in the background -->
+        <!-- Slide 2 -->
+        <div class="hero-slide" style="background-image: url('/images/Hero/slider-02.webp');">
+            <div class="hero-content">
+                <div class="content-wrapper max-w-xl">
+                    <h1 class="hero-title">
+                        Elevate Your Team<br>
+                        <span style="color: var(--accent-gold);">Expert Staffing Solutions</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        With relentless dedication to excellence, we specialize in connecting top-tier talent with leading companies.
+                    </p>
+                    <a href="/services" class="cta-button">
+                        Our Services
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Job Search Form -->
-        <div class="pb-8">
-            <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-lg shadow-lg p-6 max-w-5xl mx-auto">
-                <form class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <!-- Job Title Search -->
-                    <div class="space-y-2">
-                        <label for="job-title" class="block text-sm font-medium text-gray-700 uppercase tracking-wide">
-                            Job Title
-                        </label>
-                        <div class="relative">
-                            <input type="text"
-                                   id="job-title"
-                                   name="job_title"
-                                   placeholder="Search here"
-                                   class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 placeholder-gray-400">
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <!-- Slide 3 -->
+        <div class="hero-slide absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 opacity-0"
+             style="background-image: url('/images/Hero/slider-03.webp');">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="relative z-10 flex flex-col justify-center h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="text-center lg:text-left">
+                        <h1 class="hero-title text-white leading-tight mb-6">
+                            Build Stronger Teams.<br>
+                            <span class="text-white">Empower People. Transform Workplaces</span>
+                        </h1>
+                        <p class="text-lg text-gray-200 mb-8 max-w-lg leading-relaxed">
+                            From talent acquisition to workforce solutions, we help companies cultivate thriving cultures where employees feel valued, supported, and ready to excel.
+                        </p>
+                        <div class="flex justify-center lg:justify-start">
+                            <a href="/jobs" class="inline-flex items-center px-8 py-4 border-2 border-white text-white font-medium text-lg hover:bg-white hover:text-gray-900 transition duration-300 ease-in-out group">
+                                Browse Jobs
+                                <svg class="ml-3 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
                         </div>
                     </div>
-
-                    <!-- Location -->
-                    <div class="space-y-2">
-                        <label for="location" class="block text-sm font-medium text-gray-700 uppercase tracking-wide">
-                            Location
-                        </label>
-                        <div class="relative">
-                            <select id="location"
-                                    name="location"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 appearance-none bg-white">
-                                <option value="">Dodoma</option>
-                                <option value="dar-es-salaam">Dar es Salaam</option>
-                                <option value="arusha">Arusha</option>
-                                <option value="mwanza">Mwanza</option>
-                                <option value="mbeya">Mbeya</option>
-                                <option value="morogoro">Morogoro</option>
-                                <option value="tanga">Tanga</option>
-                                <option value="remote">Remote</option>
-                            </select>
-                            <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Categories -->
-                    <div class="space-y-2">
-                        <label for="categories" class="block text-sm font-medium text-gray-700 uppercase tracking-wide">
-                            Categories
-                        </label>
-                        <div class="relative">
-                            <select id="categories"
-                                    name="categories"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 appearance-none bg-white">
-                                <option value="">Banker</option>
-                                <option value="technology">Technology</option>
-                                <option value="finance">Finance & Banking</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="sales">Sales</option>
-                                <option value="hr">Human Resources</option>
-                                <option value="operations">Operations</option>
-                                <option value="consulting">Consulting</option>
-                                <option value="education">Education</option>
-                                <option value="legal">Legal</option>
-                            </select>
-                            <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Search Button -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-transparent uppercase tracking-wide">
-                            Action
-                        </label>
-                        <button type="submit"
-                                class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-semibold py-3 px-6 rounded-md transition duration-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 uppercase tracking-wide">
-                            Search
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
+
+        <!-- Navigation Dots -->
+        <div class="slider-navigation">
+            <button class="slider-dot active" data-slide="0"></button>
+            <button class="slider-dot" data-slide="1"></button>
+            <button class="slider-dot" data-slide="2"></button>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="slider-arrow prev" id="prevSlide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button class="slider-arrow next" id="nextSlide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
     </div>
-</section>
 
-<style>
-    /* Extra Bold Hero Title */
-    .hero-title {
-        font-weight: 900 !important;
-        font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+    <!-- Job Search Form -->
+{{--    <div class="search-form">--}}
+{{--        <div class="search-container">--}}
+{{--            <form class="form-grid">--}}
+{{--                <div class="form-group">--}}
+{{--                    <label for="job-title" class="form-label">Job Title</label>--}}
+{{--                    <input type="text" id="job-title" name="job_title" placeholder="Search..." class="form-input">--}}
+{{--                </div>--}}
+{{--                <div class="form-group">--}}
+{{--                    <label for="location" class="form-label">Location</label>--}}
+{{--                    <select id="location" name="location" class="form-select">--}}
+{{--                        <option value="">All Locations</option>--}}
+{{--                        <option value="dodoma">Dodoma</option>--}}
+{{--                        <option value="dar-es-salaam">Dar es Salaam</option>--}}
+{{--                        <option value="arusha">Arusha</option>--}}
+{{--                        <option value="mwanza">Mwanza</option>--}}
+{{--                        <option value="remote">Remote</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                <div class="form-group">--}}
+{{--                    <label for="categories" class="form-label">Category</label>--}}
+{{--                    <select id="categories" name="categories" class="form-select">--}}
+{{--                        <option value="">All Categories</option>--}}
+{{--                        <option value="technology">Technology</option>--}}
+{{--                        <option value="finance">Finance</option>--}}
+{{--                        <option value="healthcare">Healthcare</option>--}}
+{{--                        <option value="marketing">Marketing</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                <div class="form-group">--}}
+{{--                    <button type="submit" class="search-button">Search</button>--}}
+{{--                </div>--}}
+{{--            </form>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
-    .hero-text {
-        font-weight: 900 !important;
-        color: white !important;
-        display: inline-block;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+    <livewire:hero-job-search />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            const prevBtn = document.getElementById('prevSlide');
+            const nextBtn = document.getElementById('nextSlide');
+            let currentSlide = 0;
+            let autoPlayInterval;
 
-    /* Responsive background images for better performance */
-    .hero-bg {
-        background-image: url('/images/Hero/hero.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    /* Custom select dropdown styling */
-    select {
-        background-image: none;
-    }
-
-    /* Mobile optimized image */
-    @media (max-width: 768px) {
-        .hero-bg {
-            background-image: url('/images/Hero/hero-mobile.jpg');
-        }
-
-        section {
-            height: auto !important;
-            min-height: 600px !important;
-        }
-
-        /* Stack form vertically on mobile */
-        .grid-cols-1.md\:grid-cols-4 {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 640px) {
-        section {
-            min-height: 500px !important;
-        }
-    }
-
-    /* WebP support for modern browsers */
-    @supports (background-image: url('image.webp')) {
-        .hero-bg {
-            background-image: url('/images/Hero/hero.webp');
-        }
-
-        @media (max-width: 768px) {
-            .hero-bg {
-                background-image: url('/images/Hero/hero-mobile.webp');
+            function showSlide(index) {
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
             }
-        }
-    }
 
-    /* Preload critical images */
-    .hero-bg::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('/images/Hero/hero.jpg');
-        background-size: cover;
-        background-position: center;
-        opacity: 0;
-        z-index: -1;
-    }
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
 
-    /* Focus states for accessibility */
-    input:focus, select:focus, button:focus {
-        outline: none;
-    }
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
 
-    /* Custom scrollbar for select dropdowns */
-    select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    }
-</style>
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 5000);
+            }
+
+            function stopAutoPlay() {
+                clearInterval(autoPlayInterval);
+            }
+
+            // Event listeners
+            nextBtn?.addEventListener('click', () => { nextSlide(); stopAutoPlay(); startAutoPlay(); });
+            prevBtn?.addEventListener('click', () => { prevSlide(); stopAutoPlay(); startAutoPlay(); });
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            });
+
+            // Touch events
+            let touchStartX = 0;
+            const slider = document.querySelector('.hero-slider');
+
+            slider.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, { passive: true });
+            slider.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 50) {
+                    diff > 0 ? nextSlide() : prevSlide();
+                    stopAutoPlay();
+                    startAutoPlay();
+                }
+            }, { passive: true });
+
+            // Auto play
+            startAutoPlay();
+
+            // Pause on visibility change
+            document.addEventListener('visibilitychange', () => {
+                document.visibilityState === 'visible' ? startAutoPlay() : stopAutoPlay();
+            });
+        });
+    </script>
+</section>

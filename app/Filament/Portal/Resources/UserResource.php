@@ -13,6 +13,7 @@ use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
 {
@@ -25,6 +26,36 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'System';
 
     protected static ?int $navigationSort = 1;
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -70,7 +101,7 @@ class UserResource extends Resource
                     ->description('Login credentials and account type')
                     ->schema([
                         Forms\Components\Select::make('role')
-                            ->label('User Role')
+                            ->label('User Type')
                             ->options([
                                 'user' => 'Job Seeker',
                                 'admin' => 'Administrator',
@@ -78,7 +109,29 @@ class UserResource extends Resource
                             ->default('user')
                             ->required()
                             ->native(false)
-                            ->helperText('Administrators have full access to the portal')
+                            ->helperText('Basic user type for system access')
+                            ->columnSpan(2),
+
+                        Forms\Components\Select::make('spatie_roles')
+                            ->label('System Role')
+                            ->relationship('roles', 'name')
+                            ->options(function () {
+                                if (auth()->user()->hasRole('super_admin')) {
+                                    return [
+                                        'super_admin' => 'Super Administrator',
+                                        'hr_manager' => 'HR Manager',
+                                        'shortlister' => 'Shortlister',
+                                        'reviewer' => 'Reviewer',
+                                    ];
+                                }
+                                return [];
+                            })
+                            ->multiple()
+                            ->native(false)
+                            ->preload()
+                            ->searchable()
+                            ->helperText('Assign system permissions and roles')
+                            ->visible(fn () => auth()->user()->hasRole('super_admin'))
                             ->columnSpan(2),
 
                         Forms\Components\DateTimePicker::make('email_verified_at')
@@ -142,7 +195,7 @@ class UserResource extends Resource
                     ->toggleable(),
 
                 Tables\Columns\BadgeColumn::make('role')
-                    ->label('Role')
+                    ->label('Type')
                     ->colors([
                         'success' => 'admin',
                         'primary' => 'user',
@@ -157,6 +210,20 @@ class UserResource extends Resource
                         default => $state,
                     })
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('System Role')
+                    ->badge()
+                    ->color('warning')
+                    ->formatStateUsing(fn (string $state): string => match($state) {
+                        'super_admin' => 'Super Admin',
+                        'hr_manager' => 'HR Manager',
+                        'shortlister' => 'Shortlister',
+                        'reviewer' => 'Reviewer',
+                        default => $state,
+                    })
+                    ->placeholder('No role assigned')
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->label('Verified')
@@ -198,7 +265,18 @@ class UserResource extends Resource
                         'user' => 'Job Seekers',
                         'admin' => 'Administrators',
                     ])
-                    ->label('User Role'),
+                    ->label('User Type'),
+
+                Tables\Filters\SelectFilter::make('roles')
+                    ->relationship('roles', 'name')
+                    ->options([
+                        'super_admin' => 'Super Administrator',
+                        'hr_manager' => 'HR Manager',
+                        'shortlister' => 'Shortlister',
+                        'reviewer' => 'Reviewer',
+                    ])
+                    ->label('System Role')
+                    ->multiple(),
 
                 Tables\Filters\TernaryFilter::make('email_verified_at')
                     ->label('Email Verification')
@@ -237,7 +315,8 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('verify_email')
                         ->label('Verify Email')
@@ -245,7 +324,7 @@ class UserResource extends Resource
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn (User $record) => $record->update(['email_verified_at' => now()]))
-                        ->visible(fn (User $record): bool => is_null($record->email_verified_at)),
+                        ->visible(fn (User $record): bool => is_null($record->email_verified_at) && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('unverify_email')
                         ->label('Unverify Email')
@@ -253,29 +332,39 @@ class UserResource extends Resource
                         ->color('danger')
                         ->requiresConfirmation()
                         ->action(fn (User $record) => $record->update(['email_verified_at' => null]))
-                        ->visible(fn (User $record): bool => !is_null($record->email_verified_at)),
+                        ->visible(fn (User $record): bool => !is_null($record->email_verified_at) && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
-                    Tables\Actions\Action::make('make_admin')
-                        ->label('Make Administrator')
-                        ->icon('heroicon-o-shield-check')
+                    Tables\Actions\Action::make('assign_role')
+                        ->label('Assign Role')
+                        ->icon('heroicon-o-user-plus')
                         ->color('warning')
-                        ->requiresConfirmation()
-                        ->modalHeading('Make Administrator')
-                        ->modalDescription('Grant administrator privileges to this user?')
-                        ->action(fn (User $record) => $record->update(['role' => 'admin']))
-                        ->visible(fn (User $record): bool => $record->role === 'user'),
+                        ->form([
+                            Forms\Components\Select::make('role_name')
+                                ->label('System Role')
+                                ->options([
+                                    'super_admin' => 'Super Administrator',
+                                    'hr_manager' => 'HR Manager',
+                                    'shortlister' => 'Shortlister',
+                                    'reviewer' => 'Reviewer',
+                                ])
+                                ->required()
+                                ->native(false),
+                        ])
+                        ->action(function (User $record, array $data) {
+                            $record->syncRoles([$data['role_name']]);
+                        })
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')),
 
-                    Tables\Actions\Action::make('remove_admin')
-                        ->label('Remove Admin Rights')
-                        ->icon('heroicon-o-user')
-                        ->color('warning')
+                    Tables\Actions\Action::make('remove_roles')
+                        ->label('Remove All Roles')
+                        ->icon('heroicon-o-user-minus')
+                        ->color('danger')
                         ->requiresConfirmation()
-                        ->modalHeading('Remove Administrator Rights')
-                        ->modalDescription('Remove administrator privileges from this user?')
-                        ->action(fn (User $record) => $record->update(['role' => 'user']))
-                        ->visible(fn (User $record): bool => $record->role === 'admin'),
+                        ->action(fn (User $record) => $record->syncRoles([]))
+                        ->visible(fn (User $record): bool => $record->roles->isNotEmpty() && auth()->user()->hasRole('super_admin')),
 
                     Tables\Actions\DeleteAction::make()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin'))
                         ->requiresConfirmation()
                         ->modalHeading('Delete User')
                         ->modalDescription('Are you sure you want to delete this user? This will also delete all their applications.')
@@ -301,17 +390,33 @@ class UserResource extends Resource
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['email_verified_at' => now()]))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
-                    Tables\Actions\BulkAction::make('make_admins')
-                        ->label('Make Administrators')
-                        ->icon('heroicon-o-shield-check')
+                    Tables\Actions\BulkAction::make('assign_role')
+                        ->label('Assign Role')
+                        ->icon('heroicon-o-user-plus')
                         ->color('warning')
-                        ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update(['role' => 'admin']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->form([
+                            Forms\Components\Select::make('role_name')
+                                ->label('System Role')
+                                ->options([
+                                    'super_admin' => 'Super Administrator',
+                                    'hr_manager' => 'HR Manager',
+                                    'shortlister' => 'Shortlister',
+                                    'reviewer' => 'Reviewer',
+                                ])
+                                ->required()
+                                ->native(false),
+                        ])
+                        ->action(function ($records, array $data) {
+                            $records->each(fn ($record) => $record->syncRoles([$data['role_name']]));
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')),
 
                     Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin'))
                         ->requiresConfirmation()
                         ->modalHeading('Delete Selected Users')
                         ->modalDescription('Are you sure you want to delete these users? This will also delete all their applications.'),
@@ -362,8 +467,8 @@ class UserResource extends Resource
 
                             Infolists\Components\Group::make([
                                 Infolists\Components\TextEntry::make('role')
+                                    ->label('User Type')
                                     ->badge()
-                                    ->size(Infolists\Components\TextEntry\TextEntrySize::Large)
                                     ->color(fn (string $state): string => match($state) {
                                         'admin' => 'success',
                                         'user' => 'primary',
@@ -372,6 +477,19 @@ class UserResource extends Resource
                                         'admin' => 'Administrator',
                                         'user' => 'Job Seeker',
                                     }),
+
+                                Infolists\Components\TextEntry::make('roles.name')
+                                    ->label('System Role')
+                                    ->badge()
+                                    ->color('warning')
+                                    ->formatStateUsing(fn (string $state): string => match($state) {
+                                        'super_admin' => 'Super Admin',
+                                        'hr_manager' => 'HR Manager',
+                                        'shortlister' => 'Shortlister',
+                                        'reviewer' => 'Reviewer',
+                                        default => $state,
+                                    })
+                                    ->placeholder('No role assigned'),
 
                                 Infolists\Components\IconEntry::make('email_verified_at')
                                     ->label('Email Verified')

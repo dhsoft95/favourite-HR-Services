@@ -9,7 +9,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -22,7 +22,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Figtree', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
                     },
                     animation: {
                         'shimmer': 'shimmer 2s infinite linear',
@@ -41,52 +42,67 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- Additional Head Content -->
-    @stack('styles')
-
+    <!-- Shimmer Loading Styles -->
     <style>
-        /* Modern Shimmer Effect */
+        /* Global Inter Font */
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+
+        /* Shimmer Loading Overlay */
+        #shimmer-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+            padding: 20px;
+        }
+
+        .shimmer-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+        }
+
+        /* Shimmer Effect */
         .shimmer {
-            background: #f6f7f8;
-            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
-            background-repeat: no-repeat;
-            background-size: 800px 104px;
-            display: inline-block;
-            position: relative;
-            animation-duration: 1s;
-            animation-fill-mode: forwards;
-            animation-iteration-count: infinite;
-            animation-name: shimmer;
-            animation-timing-function: linear;
+            background: linear-gradient(
+                90deg,
+                #f0f0f0 0%,
+                #e0e0e0 20%,
+                #f0f0f0 40%,
+                #f0f0f0 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
         }
 
-        .dark .shimmer {
-            background: #374151;
-            background-image: linear-gradient(to right, #374151 0%, #4b5563 20%, #374151 40%, #374151 100%);
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
         }
 
-        .shimmer-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-        }
-
-        .dark .shimmer-card {
-            background: #1f2937;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        /* Shimmer Elements */
+        .shimmer-title {
+            height: 32px;
+            margin-bottom: 12px;
         }
 
         .shimmer-line {
             height: 16px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-        }
-
-        .shimmer-title {
-            height: 24px;
-            margin-bottom: 16px;
-            border-radius: 8px;
+            margin-bottom: 8px;
         }
 
         .shimmer-avatar {
@@ -95,68 +111,127 @@
             border-radius: 50%;
         }
 
+        .shimmer-button {
+            height: 44px;
+            border-radius: 8px;
+        }
+
         .shimmer-image {
             height: 200px;
-            border-radius: 8px;
             margin-bottom: 16px;
         }
 
-        .shimmer-button {
-            height: 40px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        #shimmer-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.5s ease-out;
-        }
-
-        .dark #shimmer-loading {
-            background: #111827;
-        }
-
-        .shimmer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-            width: 100%;
+        .shimmer-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .shimmer-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 24px;
+            margin-bottom: 32px;
         }
 
-        @media (min-width: 768px) {
-            .shimmer-grid {
-                grid-template-columns: repeat(2, 1fr);
+        /* Red Accent Shimmer (for logo/brand elements) */
+        .shimmer-accent {
+            background: linear-gradient(
+                90deg,
+                rgba(220, 38, 38, 0.1) 0%,
+                rgba(220, 38, 38, 0.2) 20%,
+                rgba(220, 38, 38, 0.1) 40%,
+                rgba(220, 38, 38, 0.1) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Layout fixes for hero section */
+        .main-content-wrapper {
+            display: block;
+            min-height: 100vh;
+        }
+
+        .hero-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            font-weight: 700;
+            font-size: 60px;
+            line-height: 62px;
+            letter-spacing: -0.02em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-slide {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: opacity 1000ms ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .slider-dot.active {
+            background-color: white;
+        }
+
+        select {
+            background-image: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        input, textarea, button {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        input:focus, select:focus, button:focus {
+            outline: none;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, span, div, a {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero-slide {
+                background-position: center right;
+            }
+
+            .hero-title {
+                font-size: 40px;
+                line-height: 44px;
             }
         }
 
-        @media (min-width: 1024px) {
-            .shimmer-grid {
-                grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 32px;
+                line-height: 36px;
             }
         }
     </style>
+
+    <!-- Additional Head Content -->
+    @stack('styles')
+
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
-<!-- Modern Shimmer Loading Overlay -->
+
+<script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>
+<livewire:apply-job-modal />
+
+<body class="font-inter antialiased bg-gray-50">
+
+<!-- Shimmer Loading Overlay -->
 <div id="shimmer-loading">
     <div class="shimmer-container">
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
-            <div class="shimmer shimmer-title w-48"></div>
+            <div class="shimmer-accent shimmer-title w-48"></div>
             <div class="flex items-center space-x-4">
                 <div class="shimmer shimmer-line w-20"></div>
                 <div class="shimmer shimmer-line w-20"></div>
@@ -166,11 +241,11 @@
 
         <!-- Hero Section -->
         <div class="mb-8">
-            <div class="shimmer shimmer-title w-3/4 mb-4"></div>
+            <div class="shimmer-accent shimmer-title w-3/4 mb-4" style="height: 48px;"></div>
             <div class="shimmer shimmer-line w-full mb-2"></div>
             <div class="shimmer shimmer-line w-5/6 mb-2"></div>
             <div class="shimmer shimmer-line w-4/6 mb-6"></div>
-            <div class="shimmer shimmer-button w-40"></div>
+            <div class="shimmer-accent shimmer-button w-40"></div>
         </div>
 
         <!-- Content Grid -->
@@ -206,56 +281,30 @@
         <!-- Stats Section -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
             <div class="shimmer-card p-6 text-center">
-                <div class="shimmer shimmer-title w-16 h-16 mx-auto mb-3 rounded-full"></div>
+                <div class="shimmer-accent w-16 h-16 mx-auto mb-3 rounded-full"></div>
                 <div class="shimmer shimmer-line w-20 mx-auto"></div>
             </div>
             <div class="shimmer-card p-6 text-center">
-                <div class="shimmer shimmer-title w-16 h-16 mx-auto mb-3 rounded-full"></div>
+                <div class="shimmer-accent w-16 h-16 mx-auto mb-3 rounded-full"></div>
                 <div class="shimmer shimmer-line w-20 mx-auto"></div>
             </div>
             <div class="shimmer-card p-6 text-center">
-                <div class="shimmer shimmer-title w-16 h-16 mx-auto mb-3 rounded-full"></div>
+                <div class="shimmer-accent w-16 h-16 mx-auto mb-3 rounded-full"></div>
                 <div class="shimmer shimmer-line w-20 mx-auto"></div>
             </div>
             <div class="shimmer-card p-6 text-center">
-                <div class="shimmer shimmer-title w-16 h-16 mx-auto mb-3 rounded-full"></div>
+                <div class="shimmer-accent w-16 h-16 mx-auto mb-3 rounded-full"></div>
                 <div class="shimmer shimmer-line w-20 mx-auto"></div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="min-h-screen flex flex-col" id="main-content" style="display: none;">
+<div class="main-content-wrapper" id="main-content" style="display: none;">
     @yield('navigation')
 
     <!-- Page Content -->
     <main class="flex-grow">
-        <!-- Flash Messages -->
-        @if (session('success'))
-            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded relative mb-4 mx-4 mt-4" role="alert">
-                <strong class="font-bold">Success!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded relative mb-4 mx-4 mt-4" role="alert">
-                <strong class="font-bold">Error!</strong>
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded relative mb-4 mx-4 mt-4" role="alert">
-                <strong class="font-bold">Please fix the following errors:</strong>
-                <ul class="list-disc list-inside mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- Main Content Area -->
         @yield('content')
     </main>
@@ -285,7 +334,7 @@
                     shimmerLoading.style.opacity = '0';
 
                     // Show main content
-                    mainContent.style.display = 'flex';
+                    mainContent.style.display = 'block';
 
                     // Remove shimmer from DOM after transition
                     setTimeout(function() {
@@ -299,10 +348,86 @@
         setTimeout(function() {
             if (shimmerLoading && mainContent && shimmerLoading.style.opacity !== '0') {
                 shimmerLoading.style.opacity = '0';
-                mainContent.style.display = 'flex';
+                mainContent.style.display = 'block';
                 setTimeout(() => shimmerLoading.remove(), 500);
             }
         }, 3000);
+    });
+
+    // Slider functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        if (slides.length > 0) {
+            function showSlide(index) {
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                    slide.style.opacity = '0';
+                });
+
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                slides[index].classList.add('active');
+                slides[index].style.opacity = '1';
+                dots[index].classList.add('active');
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000);
+
+            if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+            if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'ArrowRight') nextSlide();
+            });
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const slider = document.querySelector('.hero-slider');
+
+            if (slider) {
+                slider.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                slider.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const swipeThreshold = 50;
+                    const swipeDistance = touchStartX - touchEndX;
+
+                    if (Math.abs(swipeDistance) > swipeThreshold) {
+                        if (swipeDistance > 0) {
+                            nextSlide();
+                        } else {
+                            prevSlide();
+                        }
+                    }
+                });
+            }
+        }
     });
 
     // Theme toggle functionality
@@ -354,6 +479,8 @@
     }, 5000);
 </script>
 
+@stack('scripts')
+
 <script>
     function showTab(tabName) {
         // Hide all content
@@ -371,5 +498,7 @@
         document.getElementById(tabName + '-tab').className = 'px-6 py-2 rounded-full font-medium transition-all duration-300 bg-[#2A2D5A] text-white text-sm';
     }
 </script>
+
+<x-toast-notification />
 </body>
 </html>

@@ -8,9 +8,9 @@
                 <div class="flex items-center">
                     <div class="text-white font-bold text-xl">
                         <div class="flex items-center space-x-2">
-                            <span class="text-2xl">FH</span>
+{{--                            <span class="text-2xl">FH</span>--}}
                             <div class="text-sm leading-tight">
-                                <img src="/images/logo/logo.png" alt="Favourite Web Services" class="h-10 w-auto">
+                                <img src="/images/logo/HR-Logo-White.png" alt="Favourite Web Services" class="h-10 w-auto">
                             </div>
                         </div>
                     </div>

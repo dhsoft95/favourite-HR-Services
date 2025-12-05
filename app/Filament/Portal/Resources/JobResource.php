@@ -24,6 +24,36 @@ class JobResource extends Resource
 
     protected static ?string $navigationGroup = 'Job Management';
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -44,6 +74,20 @@ class JobResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->columnSpan(2),
+
+                        Forms\Components\FileUpload::make('image')
+                            ->label('Company Logo/Image')
+                            ->image()
+                            ->directory('job-images')
+                            ->disk('public')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '1:1',
+                                '16:9',
+                            ])
+                            ->maxSize(2048)
+                            ->helperText('Upload company logo or job-related image (max 2MB)')
+                            ->columnSpan(4),
 
                         Forms\Components\Select::make('job_type')
                             ->label('Employment Type')
@@ -182,6 +226,13 @@ class JobResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->size(40)
+                    ->circular()
+                    ->defaultImageUrl('/images/default-company.png'),
+
                 Tables\Columns\TextColumn::make('title')
                     ->label('Job Title')
                     ->searchable()
@@ -270,7 +321,8 @@ class JobResource extends Resource
                     ->label('Active')
                     ->onColor('success')
                     ->offColor('danger')
-                    ->toggleable(),
+                    ->toggleable()
+                    ->disabled(fn () => !auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Posted')
@@ -363,7 +415,8 @@ class JobResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('publish')
                         ->icon('heroicon-o-check-circle')
@@ -372,7 +425,7 @@ class JobResource extends Resource
                         ->modalHeading('Publish Job')
                         ->modalDescription('Are you sure you want to publish this job? It will be visible to all users.')
                         ->action(fn (Job $record) => $record->update(['status' => 'published']))
-                        ->visible(fn (Job $record): bool => $record->status === 'draft'),
+                        ->visible(fn (Job $record): bool => $record->status === 'draft' && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('unpublish')
                         ->icon('heroicon-o-arrow-uturn-left')
@@ -381,7 +434,7 @@ class JobResource extends Resource
                         ->modalHeading('Move to Draft')
                         ->modalDescription('This job will no longer be visible to users.')
                         ->action(fn (Job $record) => $record->update(['status' => 'draft']))
-                        ->visible(fn (Job $record): bool => $record->status === 'published'),
+                        ->visible(fn (Job $record): bool => $record->status === 'published' && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('close')
                         ->icon('heroicon-o-lock-closed')
@@ -390,7 +443,7 @@ class JobResource extends Resource
                         ->modalHeading('Close Job Posting')
                         ->modalDescription('This job will be marked as closed and no longer accept applications.')
                         ->action(fn (Job $record) => $record->update(['status' => 'closed']))
-                        ->visible(fn (Job $record): bool => $record->status !== 'closed'),
+                        ->visible(fn (Job $record): bool => $record->status !== 'closed' && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\Action::make('reopen')
                         ->icon('heroicon-o-lock-open')
@@ -399,9 +452,10 @@ class JobResource extends Resource
                         ->modalHeading('Reopen Job Posting')
                         ->modalDescription('This job will be moved to draft status.')
                         ->action(fn (Job $record) => $record->update(['status' => 'draft']))
-                        ->visible(fn (Job $record): bool => $record->status === 'closed'),
+                        ->visible(fn (Job $record): bool => $record->status === 'closed' && auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ])->icon('heroicon-o-ellipsis-horizontal')
                     ->tooltip('Actions'),
             ])
@@ -412,41 +466,47 @@ class JobResource extends Resource
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['status' => 'published']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\BulkAction::make('unpublish')
                         ->icon('heroicon-o-arrow-uturn-left')
                         ->color('warning')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['status' => 'draft']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\BulkAction::make('close')
                         ->icon('heroicon-o-lock-closed')
                         ->color('danger')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['status' => 'closed']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\BulkAction::make('feature')
                         ->icon('heroicon-o-star')
                         ->color('warning')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['is_featured' => true]))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
                     Tables\Actions\BulkAction::make('unfeature')
                         ->icon('heroicon-o-star')
                         ->color('gray')
                         ->requiresConfirmation()
                         ->action(fn ($records) => $records->each->update(['is_featured' => false]))
-                        ->deselectRecordsAfterCompletion(),
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
 
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')
-            ->poll('30s') // Auto-refresh every 30 seconds
+            ->poll('30s')
             ->striped()
             ->emptyStateHeading('No job postings yet')
             ->emptyStateDescription('Create your first job posting to get started.')
@@ -454,7 +514,8 @@ class JobResource extends Resource
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Create Job Posting')
-                    ->icon('heroicon-o-plus'),
+                    ->icon('heroicon-o-plus')
+                    ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'hr_manager'])),
             ]);
     }
 
@@ -466,6 +527,13 @@ class JobResource extends Resource
                     ->schema([
                         Infolists\Components\Split::make([
                             Infolists\Components\Group::make([
+                                Infolists\Components\ImageEntry::make('image')
+                                    ->label('Company Image')
+                                    ->disk('public')
+                                    ->size(100)
+                                    ->circular()
+                                    ->defaultImageUrl('/images/default-company.png'),
+
                                 Infolists\Components\TextEntry::make('title')
                                     ->label('Job Title')
                                     ->size(Infolists\Components\TextEntry\TextEntrySize::Large)

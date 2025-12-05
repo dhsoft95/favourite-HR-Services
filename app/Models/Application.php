@@ -14,6 +14,14 @@ class Application extends Model
         'job_id',
         'cv_path',
         'status',
+        'interview_type',
+        'interview_instructions',
+        'interview_date',
+    ];
+
+    protected $casts = [
+        'interview_date' => 'datetime',
+
     ];
 
     public function user()

@@ -14,6 +14,7 @@ class Job extends Model
     protected $fillable = [
         'title',
         'company_name',
+        'image',
         'description',
         'requirements',
         'benefits',
@@ -25,7 +26,6 @@ class Job extends Model
         'is_featured',
         'is_active',
         'status'
-
     ];
 
     protected $casts = [

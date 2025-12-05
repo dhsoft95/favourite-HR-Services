@@ -102,10 +102,81 @@
                     <input type="text" placeholder="Search" class="block w-48 pl-10 pr-4 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm">
                 </div>
 
-                <!-- Login Button -->
-                <a href="/login" class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out shadow-sm">
-                    Login
-                </a>
+                @auth
+                    <!-- User Dropdown (Logged In) -->
+                    <div class="relative" x-data="{ userMenuOpen: false }">
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2 text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out">
+                            <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <span class="hidden md:block">{{ Auth::user()->name }}</span>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': userMenuOpen}" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+
+                        <div x-show="userMenuOpen" x-transition @click.away="userMenuOpen = false" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                            <div class="py-1">
+                                <!-- User Info -->
+                                <div class="px-4 py-3 border-b border-gray-200">
+                                    <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                </div>
+
+                                @if(Auth::user()->isAdmin())
+                                    <!-- Admin Panel Link -->
+                                    <a href="/portal" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        Admin Panel
+                                    </a>
+                                @endif
+
+                                <!-- Dashboard -->
+                                <a href="/dashboard" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                    </svg>
+                                    Dashboard
+                                </a>
+
+                                <!-- My Applications -->
+                                <a href="/dashboard" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    My Applications
+                                </a>
+
+                                <!-- Profile -->
+                                <a href="/profile" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    Profile
+                                </a>
+                                <div class="border-t border-gray-200"></div>
+                                <!-- Logout -->
+                                    <button wire:click="logout" type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                        <svg class="mr-3 h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                        </svg>
+                                        Logout
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Login/Register Buttons (Guest) -->
+                    <a href="/login" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        Login
+                    </a>
+                    <a href="/register" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out shadow-sm">
+                        Register
+                    </a>
+                @endauth
             </div>
 
             <!-- Mobile/Tablet menu button -->
@@ -123,6 +194,19 @@
                 <!-- Mobile menu -->
                 <div x-show="open" x-transition class="origin-top-right absolute right-4 top-16 mt-2 w-80 max-w-sm rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" @click.away="open = false">
                     <div class="px-4 py-6 space-y-4">
+                        @auth
+                            <!-- User Info Mobile -->
+                            <div class="flex items-center space-x-3 pb-4 border-b border-gray-200">
+                                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold text-lg">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                </div>
+                            </div>
+                        @endauth
+
                         <!-- Navigation Links -->
                         <div class="space-y-2">
                             <a href="/" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('/') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
@@ -140,6 +224,20 @@
                             <a href="/contact" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 {{ request()->is('contact') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-red-50' }}" @click="open = false">
                                 Contact Us
                             </a>
+
+                            @auth
+                                @if(Auth::user()->isAdmin())
+                                    <a href="/portal" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 text-indigo-600 hover:bg-indigo-50" @click="open = false">
+                                        Admin Panel
+                                    </a>
+                                @endif
+                                <a href="/dashboard" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 text-gray-600 hover:text-red-600 hover:bg-red-50" @click="open = false">
+                                    Dashboard
+                                </a>
+                                <a href="/profile" class="block px-4 py-3 text-base font-medium rounded-lg transition duration-150 text-gray-600 hover:text-red-600 hover:bg-red-50" @click="open = false">
+                                    Profile
+                                </a>
+                            @endauth
                         </div>
 
                         <hr class="border-gray-200">
@@ -198,10 +296,26 @@
                             <input type="text" placeholder="Search" class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         </div>
 
-                        <!-- Mobile Login -->
-                        <a href="/login" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-white bg-indigo-800 hover:bg-indigo-700 transition duration-150 {{ request()->is('login') ? 'bg-indigo-900' : '' }}" @click="open = false">
-                            Login
-                        </a>
+                        @auth
+                            <!-- Mobile Logout -->
+
+                                @csrf
+                                <button wire:click="logout" type="submit" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 transition duration-150" @click="open = false">
+                                    {{ __('Log Out') }}
+                                </button>
+
+
+                        @else
+                            <!-- Mobile Login/Register -->
+                            <div class="space-y-2">
+                                <a href="/login" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition duration-150" @click="open = false">
+                                    Login
+                                </a>
+                                <a href="/register" class="block w-full px-4 py-3 text-center text-base font-medium rounded-lg text-white bg-indigo-800 hover:bg-indigo-700 transition duration-150" @click="open = false">
+                                    Register
+                                </a>
+                            </div>
+                        @endauth
                     </div>
                 </div>
             </div>

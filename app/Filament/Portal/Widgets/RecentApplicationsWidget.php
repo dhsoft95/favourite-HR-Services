@@ -19,8 +19,7 @@ class RecentApplicationsWidget extends BaseWidget
             ->query(
                 Application::query()
                     ->with(['user', 'job'])
-                    ->latest()
-                    ->limit(10)
+                    ->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Portal\Pages\Reports;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Portal\Resources\JobResource\Widgets\StatsOverview;
 use App\Filament\Portal\Widgets\ApplicationStatusChart;
 use App\Filament\Portal\Widgets\JobStatusChart;
@@ -50,9 +51,10 @@ class PortalPanelProvider extends PanelProvider
                 'System',
             ])
             ->discoverResources(in: app_path('Filament/Portal/Resources'), for: 'App\\Filament\\Portal\\Resources')
-            ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\\Filament\\Portal\\Pages')
+//            ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\\Filament\\Portal\\Pages')
             ->pages([
-                Pages\Dashboard::class, Reports::class,
+                Pages\Dashboard::class,
+                Reports::class,
             ])
 //            ->discoverWidgets(in: app_path('Filament/Portal/Widgets'), for: 'App\\Filament\\Portal\\Widgets')
             ->widgets([
@@ -74,10 +76,28 @@ class PortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->plugins([
+                FilamentShieldPlugin::make()
+                    ->gridColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 3
+                    ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 4,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ]),
+            ])
             ->authMiddleware([
                 Authenticate::class,
+                \App\Http\Middleware\IsAdminMiddleware::class,
             ])
-//            ->viteTheme('resources/css/filament/portal/theme.css')
             ->maxContentWidth('full')
             ->spa();
     }

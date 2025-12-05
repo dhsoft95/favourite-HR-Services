@@ -8,6 +8,7 @@ use App\Models\Job;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,6 +28,36 @@ class ApplicationResource extends Resource
     protected static ?string $navigationGroup = 'Job Management';
 
     protected static ?string $recordTitleAttribute = 'user.name';
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'hr_manager', 'shortlister', 'reviewer']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -217,52 +248,180 @@ class ApplicationResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('shortlist')
+                    ->icon('heroicon-o-star')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->action(function (Application $record) {
+                        try {
+                            $oldStatus = $record->status;
+                            $record->update(['status' => 'shortlisted']);
 
-                    Tables\Actions\Action::make('download_cv')
-                        ->label('Download CV')
-                        ->icon('heroicon-o-arrow-down-tray')
-                        ->color('primary')
-                        ->url(fn (Application $record): string => Storage::url($record->cv_path))
-                        ->openUrlInNewTab(),
+                            // Send email notification
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
 
-                    Tables\Actions\Action::make('shortlist')
-                        ->icon('heroicon-o-star')
-                        ->color('info')
-                        ->requiresConfirmation()
-                        ->action(fn (Application $record) => $record->update(['status' => 'shortlisted']))
-                        ->visible(fn (Application $record): bool => in_array($record->status, ['pending', 'reviewing'])),
+                            // Filament toast notification
+                            Notification::make()
+                                ->success()
+                                ->title('Applicant Shortlisted')
+                                ->body($record->user->name . ' has been shortlisted and notified via email.')
+                                ->send();
 
-                    Tables\Actions\Action::make('schedule_interview')
-                        ->icon('heroicon-o-calendar')
-                        ->color('primary')
-                        ->requiresConfirmation()
-                        ->action(fn (Application $record) => $record->update(['status' => 'interview']))
-                        ->visible(fn (Application $record): bool => $record->status === 'shortlisted'),
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Error')
+                                ->body('Failed to shortlist application: ' . $e->getMessage())
+                                ->send();
 
-                    Tables\Actions\Action::make('accept')
-                        ->icon('heroicon-o-check-circle')
-                        ->color('success')
-                        ->requiresConfirmation()
-                        ->modalHeading('Accept Application')
-                        ->modalDescription('Are you sure you want to accept this application?')
-                        ->action(fn (Application $record) => $record->update(['status' => 'accepted']))
-                        ->visible(fn (Application $record): bool => !in_array($record->status, ['accepted', 'rejected'])),
+                            \Log::error('Shortlist error: ' . $e->getMessage());
+                        }
+                    })
+                    ->visible(fn (Application $record): bool =>
+                        in_array($record->status, ['pending', 'reviewing']) &&
+                        auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])
+                    ),
+                Tables\Actions\Action::make('schedule_interview')
+                    ->icon('heroicon-o-calendar')
+                    ->color('primary')
+                    ->form([
+                        Forms\Components\Section::make('Interview Details')
+                            ->description('Schedule interview and provide instructions to the candidate')
+                            ->schema([
+                                Forms\Components\Select::make('interview_type')
+                                    ->label('Interview Type')
+                                    ->options([
+                                        'internal' => 'Internal Interview (Favorite HR Services)',
+                                        'external' => 'External Interview (Client Interview)',
+                                    ])
+                                    ->required()
+                                    ->native(false)
+                                    ->helperText('Choose whether this is an internal HR interview or client interview')
+                                    ->columnSpanFull(),
 
-                    Tables\Actions\Action::make('reject')
-                        ->icon('heroicon-o-x-circle')
-                        ->color('danger')
-                        ->requiresConfirmation()
-                        ->modalHeading('Reject Application')
-                        ->modalDescription('Are you sure you want to reject this application?')
-                        ->action(fn (Application $record) => $record->update(['status' => 'rejected']))
-                        ->visible(fn (Application $record): bool => !in_array($record->status, ['accepted', 'rejected'])),
+                                Forms\Components\Textarea::make('interview_instructions')
+                                    ->label('Interview Instructions')
+                                    ->placeholder('Provide interview details, date/time, location, what to bring, meeting link, etc.')
+                                    ->rows(6)
+                                    ->required()
+                                    ->helperText('These instructions will be sent to the candidate via email')
+                                    ->columnSpanFull(),
 
-                    Tables\Actions\DeleteAction::make(),
-                ])->icon('heroicon-o-ellipsis-horizontal')
-                    ->tooltip('Actions'),
+                                Forms\Components\DateTimePicker::make('interview_date')
+                                    ->label('Interview Date & Time')
+                                    ->required()
+                                    ->native(false)
+                                    ->displayFormat('F d, Y \a\t h:i A')
+                                    ->minDate(now())
+                                    ->helperText('Select the interview date and time')
+                                    ->columnSpanFull(),
+                            ])
+                    ])
+                    ->action(function (Application $record, array $data) {
+                        try {
+                            $oldStatus = $record->status;
+                            $record->update([
+                                'status' => 'interview',
+                                'interview_type' => $data['interview_type'],
+                                'interview_instructions' => $data['interview_instructions'],
+                                'interview_date' => $data['interview_date'],
+                            ]);
+
+                            // Send email notification with interview details
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $data));
+
+                            // Filament toast
+                            $interviewTypeLabel = $data['interview_type'] === 'internal' ? 'Internal Interview' : 'Client Interview';
+                            Notification::make()
+                                ->success()
+                                ->title('Interview Scheduled')
+                                ->body($record->user->name . ' has been notified about the ' . $interviewTypeLabel)
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Error')
+                                ->body('Failed to schedule interview: ' . $e->getMessage())
+                                ->send();
+
+                            \Log::error('Interview scheduling error: ' . $e->getMessage());
+                        }
+                    })
+                    ->visible(fn (Application $record): bool =>
+                        $record->status === 'shortlisted' &&
+                        auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
+                    ),
+
+
+
+                Tables\Actions\Action::make('accept')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Accept Application')
+                    ->modalDescription('Are you sure you want to accept this application? The candidate will be notified.')
+                    ->action(function (Application $record) {
+                        try {
+                            $oldStatus = $record->status;
+                            $record->update(['status' => 'accepted']);
+
+                            // Send email notification
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+
+                            // Filament toast
+                            Notification::make()
+                                ->success()
+                                ->title('Application Accepted')
+                                ->body('Congratulations! ' . $record->user->name . ' has been accepted and notified.')
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Error')
+                                ->body('Failed to accept application: ' . $e->getMessage())
+                                ->send();
+                        }
+                    })
+                    ->visible(fn (Application $record): bool =>
+                        in_array($record->status, ['shortlisted', 'interview']) &&
+                        auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
+                    ),
+
+                Tables\Actions\Action::make('reject')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Reject Application')
+                    ->modalDescription('Are you sure you want to reject this application? The candidate will be notified.')
+                    ->action(function (Application $record) {
+                        try {
+                            $oldStatus = $record->status;
+                            $record->update(['status' => 'rejected']);
+
+                            // Send email notification
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+
+                            // Filament toast
+                            Notification::make()
+                                ->warning()
+                                ->title('Application Rejected')
+                                ->body($record->user->name . ' has been notified of the rejection.')
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Error')
+                                ->body('Failed to reject application: ' . $e->getMessage())
+                                ->send();
+                        }
+                    })
+                    ->visible(fn (Application $record): bool =>
+                        !in_array($record->status, ['accepted', 'rejected']) &&
+                        auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -270,24 +429,60 @@ class ApplicationResource extends Resource
                         ->icon('heroicon-o-eye')
                         ->color('warning')
                         ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update(['status' => 'reviewing']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'reviewing']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])),
 
                     Tables\Actions\BulkAction::make('shortlist')
                         ->icon('heroicon-o-star')
                         ->color('info')
                         ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update(['status' => 'shortlisted']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'shortlisted']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])),
+
+                    Tables\Actions\BulkAction::make('accept')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'accepted']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])),
 
                     Tables\Actions\BulkAction::make('reject')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update(['status' => 'rejected']))
-                        ->deselectRecordsAfterCompletion(),
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'rejected']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])),
 
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')
