@@ -71,12 +71,12 @@ class JobResource extends Resource
                         Forms\Components\TextInput::make('company_name')
                             ->label('Company Name')
                             ->placeholder('e.g., Tech Solutions Ltd')
-                            ->required()
+//                            ->required()
                             ->maxLength(255)
                             ->columnSpan(2),
 
                         Forms\Components\FileUpload::make('image')
-                            ->label('Company Logo/Image')
+                            ->label('Image')
                             ->image()
                             ->directory('job-images')
                             ->disk('public')

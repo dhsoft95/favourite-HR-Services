@@ -95,7 +95,7 @@ class ApplicationResource extends Resource
                                 'application/msword',
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
                             ])
-                            ->maxSize(5120) // 5MB
+                            ->maxSize(5120)
                             ->required()
                             ->downloadable()
                             ->openable()
@@ -111,6 +111,7 @@ class ApplicationResource extends Resource
                             ->options([
                                 'pending' => 'Pending Review',
                                 'reviewing' => 'Under Review',
+                                'profiled' => 'Profile Review',
                                 'shortlisted' => 'Shortlisted',
                                 'interview' => 'Interview Scheduled',
                                 'accepted' => 'Accepted',
@@ -145,11 +146,9 @@ class ApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('job.title')
                     ->label('Job Position')
                     ->searchable()
-                    ->sortable()
                     ->weight('medium')
-                    ->wrap()
-                    ->limit(30)
-                    ->description(fn (Application $record): string => $record->job->company_name),
+                    ->limit(40)
+                    ->description(fn (Application $record): ?string => $record->job?->company_name),
 
                 Tables\Columns\BadgeColumn::make('job.job_type')
                     ->label('Type')
@@ -167,6 +166,7 @@ class ApplicationResource extends Resource
                     ->colors([
                         'secondary' => 'pending',
                         'warning' => 'reviewing',
+                        'purple' => 'profiled',
                         'info' => 'shortlisted',
                         'primary' => 'interview',
                         'success' => 'accepted',
@@ -175,6 +175,7 @@ class ApplicationResource extends Resource
                     ->icons([
                         'heroicon-o-clock' => 'pending',
                         'heroicon-o-eye' => 'reviewing',
+                        'heroicon-o-user-circle' => 'profiled',
                         'heroicon-o-star' => 'shortlisted',
                         'heroicon-o-calendar' => 'interview',
                         'heroicon-o-check-circle' => 'accepted',
@@ -202,6 +203,7 @@ class ApplicationResource extends Resource
                     ->options([
                         'pending' => 'Pending Review',
                         'reviewing' => 'Under Review',
+                        'profiled' => 'Profile Review',
                         'shortlisted' => 'Shortlisted',
                         'interview' => 'Interview Scheduled',
                         'accepted' => 'Accepted',
@@ -248,6 +250,40 @@ class ApplicationResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('profile')
+                    ->icon('heroicon-o-user-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Profile for Review')
+                    ->modalDescription('Move this application to profile review stage. The candidate will be notified.')
+                    ->action(function (Application $record) {
+                        try {
+                            $oldStatus = $record->status;
+                            $record->update(['status' => 'profiled']);
+
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
+
+                            Notification::make()
+                                ->success()
+                                ->title('Application Moved to Profile Review')
+                                ->body($record->user->name . ' has been moved to profile review stage.')
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Error')
+                                ->body('Failed to move to profile review: ' . $e->getMessage())
+                                ->send();
+
+                            \Log::error('Profile review error: ' . $e->getMessage());
+                        }
+                    })
+                    ->visible(fn (Application $record): bool =>
+                        in_array($record->status, ['pending', 'reviewing']) &&
+                        auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
+                    ),
+
                 Tables\Actions\Action::make('shortlist')
                     ->icon('heroicon-o-star')
                     ->color('info')
@@ -257,10 +293,8 @@ class ApplicationResource extends Resource
                             $oldStatus = $record->status;
                             $record->update(['status' => 'shortlisted']);
 
-                            // Send email notification
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
 
-                            // Filament toast notification
                             Notification::make()
                                 ->success()
                                 ->title('Applicant Shortlisted')
@@ -278,9 +312,10 @@ class ApplicationResource extends Resource
                         }
                     })
                     ->visible(fn (Application $record): bool =>
-                        in_array($record->status, ['pending', 'reviewing']) &&
+                        $record->status === 'profiled' &&
                         auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])
                     ),
+
                 Tables\Actions\Action::make('schedule_interview')
                     ->icon('heroicon-o-calendar')
                     ->color('primary')
@@ -327,10 +362,8 @@ class ApplicationResource extends Resource
                                 'interview_date' => $data['interview_date'],
                             ]);
 
-                            // Send email notification with interview details
                             $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $data));
 
-                            // Filament toast
                             $interviewTypeLabel = $data['interview_type'] === 'internal' ? 'Internal Interview' : 'Client Interview';
                             Notification::make()
                                 ->success()
@@ -353,8 +386,6 @@ class ApplicationResource extends Resource
                         auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
                     ),
 
-
-
                 Tables\Actions\Action::make('accept')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
@@ -366,10 +397,8 @@ class ApplicationResource extends Resource
                             $oldStatus = $record->status;
                             $record->update(['status' => 'accepted']);
 
-                            // Send email notification
                             $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
 
-                            // Filament toast
                             Notification::make()
                                 ->success()
                                 ->title('Application Accepted')
@@ -400,10 +429,8 @@ class ApplicationResource extends Resource
                             $oldStatus = $record->status;
                             $record->update(['status' => 'rejected']);
 
-                            // Send email notification
                             $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
 
-                            // Filament toast
                             Notification::make()
                                 ->warning()
                                 ->title('Application Rejected')
@@ -438,6 +465,20 @@ class ApplicationResource extends Resource
                         })
                         ->deselectRecordsAfterCompletion()
                         ->visible(fn () => auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])),
+
+                    Tables\Actions\BulkAction::make('profile')
+                        ->icon('heroicon-o-user-circle')
+                        ->color('purple')
+                        ->requiresConfirmation()
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'profiled']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn () => auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])),
 
                     Tables\Actions\BulkAction::make('shortlist')
                         ->icon('heroicon-o-star')
@@ -534,6 +575,7 @@ class ApplicationResource extends Resource
                                     ->color(fn (string $state): string => match ($state) {
                                         'pending' => 'secondary',
                                         'reviewing' => 'warning',
+                                        'profiled' => 'purple',
                                         'shortlisted' => 'info',
                                         'interview' => 'primary',
                                         'accepted' => 'success',

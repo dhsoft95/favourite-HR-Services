@@ -33,7 +33,7 @@ class RecentApplicationsWidget extends BaseWidget
                     ->searchable()
                     ->weight('medium')
                     ->limit(40)
-                    ->description(fn (Application $record): string => $record->job->company_name),
+                    ->description(fn (Application $record): ?string => $record->job?->company_name),
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
