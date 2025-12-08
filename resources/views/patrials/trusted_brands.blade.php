@@ -5,7 +5,7 @@
              style="max-width: 1288px; height: 373px;">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                 style="background-image: url('/images/cta-background.webp');">
+                 style="background-image: url('/images/cta-background.webp ');">
                 <!-- Enhanced Overlay for better text readability -->
                 <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/30"></div>
             </div>

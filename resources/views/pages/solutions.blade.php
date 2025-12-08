@@ -187,7 +187,7 @@
                         </div>
                     </div>
                     <div class="lg:order-1">
-                        <img src="/images/solutions/background-checks.jpg" alt="Background Checks"
+                        <img src="/images/solutions/background-checks.webp" alt="Background Checks"
                              class="w-full h-[500px] object-cover rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                     </div>
                 </div>

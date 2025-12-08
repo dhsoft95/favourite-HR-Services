@@ -65,7 +65,7 @@
             <!-- Card 4: Background Checks -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="h-48 bg-gray-200">
-                    <img src="images/solutions/background-checks.jpg" alt="Background Check Services" class="w-full h-full object-cover">
+                    <img src="images/solutions/background-checks.webp" alt="Background Check Services" class="w-full h-full object-cover">
                 </div>
                 <div class="p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-3">Background Checks</h3>
