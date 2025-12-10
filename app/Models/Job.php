@@ -19,7 +19,7 @@ class Job extends Model
         'requirements',
         'benefits',
         'job_type',
-        'category',
+        'category_id',
         'location',
         'experience_level',
         'deadline',
@@ -37,5 +37,10 @@ class Job extends Model
     public function applications()
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(JobCategory::class, 'category_id');
     }
 }

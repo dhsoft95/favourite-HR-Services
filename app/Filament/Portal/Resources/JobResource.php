@@ -76,7 +76,7 @@ class JobResource extends Resource
                             ->columnSpan(2),
 
                         Forms\Components\FileUpload::make('image')
-                            ->label('Image')
+                            ->label('Job Cover Image')
                             ->image()
                             ->directory('job-images')
                             ->disk('public')
@@ -86,7 +86,7 @@ class JobResource extends Resource
                                 '16:9',
                             ])
                             ->maxSize(2048)
-                            ->helperText('Upload company logo or job-related image (max 2MB)')
+                            ->helperText('Upload job cover image. Recommended: 400x400px (square) or 800x450px (landscape). Maximum file size: 2MB. Supported formats: JPG, PNG, WebP.')
                             ->columnSpan(4),
 
                         Forms\Components\Select::make('job_type')
@@ -102,26 +102,50 @@ class JobResource extends Resource
                             ->required()
                             ->columnSpan(1),
 
-                        Forms\Components\Select::make('category')
+                        Forms\Components\Select::make('category_id')
                             ->label('Job Category')
-                            ->options([
-                                'IT & Software' => 'IT & Software',
-                                'Finance' => 'Finance',
-                                'Healthcare' => 'Healthcare',
-                                'Education' => 'Education',
-                                'Marketing' => 'Marketing',
-                                'Sales' => 'Sales',
-                                'Engineering' => 'Engineering',
-                                'Customer Service' => 'Customer Service',
-                                'Human Resources' => 'Human Resources',
-                                'Administration' => 'Administration',
-                                'Operations' => 'Operations',
-                                'Legal' => 'Legal',
-                            ])
-                            ->native(false)
+                            ->relationship('category', 'name')
                             ->searchable()
+                            ->preload()
                             ->required()
-                            ->columnSpan(1),
+                            ->columnSpan(1)
+                            ->createOptionForm([
+                                Forms\Components\Section::make('Category Details')
+                                    ->description('Create a new job category')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Category Name')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                                if ($operation !== 'create') {
+                                                    return;
+                                                }
+                                                $set('slug', \Illuminate\Support\Str::slug($state));
+                                            }),
+
+                                        Forms\Components\TextInput::make('slug')
+                                            ->label('URL Slug')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->unique(ignoreRecord: true)
+                                            ->regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')
+                                            ->helperText('Used in URLs (auto-generated from name)'),
+
+                                        Forms\Components\Textarea::make('description')
+                                            ->label('Description')
+                                            ->maxLength(500)
+                                            ->rows(3)
+                                            ->helperText('Brief description of this job category'),
+
+                                        Forms\Components\Toggle::make('is_active')
+                                            ->label('Active')
+                                            ->default(true)
+                                            ->helperText('Whether this category is available for selection'),
+                                    ])
+                                    ->columns(2),
+                            ]),
 
                         Forms\Components\TextInput::make('location')
                             ->label('Location')
@@ -272,13 +296,12 @@ class JobResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('category')
+                Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->searchable()
                     ->sortable()
                     ->toggleable()
                     ->wrap(),
-
                 Tables\Columns\TextColumn::make('location')
                     ->label('Location')
                     ->icon('heroicon-o-map-pin')
