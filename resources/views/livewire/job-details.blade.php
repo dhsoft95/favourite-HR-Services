@@ -29,17 +29,18 @@
                     <div class="bg-white rounded-lg shadow-sm p-8">
 
                         <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-8">
+                            <!-- Job Header -->
                             <div class="flex items-start mb-4 sm:mb-0">
-                                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <div class="w-16 h-16 bg-[#2A2D5A] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                                     <span class="text-white text-xl font-bold">{{ substr($job->company_name, 0, 1) }}</span>
                                 </div>
 
                                 <div>
                                     <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $job->title }}</h1>
                                     <div class="flex flex-wrap items-center gap-3">
-                                        <span class="bg-{{ $job->job_type === 'Full Time' ? 'green' : 'blue' }}-500 text-white text-xs px-3 py-1 rounded-full uppercase font-bold">
-                                            {{ $job->job_type }}
-                                        </span>
+                                    <span class="bg-{{ $job->job_type === 'Full Time' ? 'green' : 'blue' }}-500 text-white text-xs px-3 py-1 rounded-full uppercase font-bold">
+                                        {{ $job->job_type }}
+                                    </span>
                                         @if($job->is_featured)
                                             <span class="text-red-500 text-xs uppercase font-medium">Featured</span>
                                         @endif
@@ -88,7 +89,7 @@
                                 @foreach(explode("\n", $job->requirements) as $requirement)
                                     @if(trim($requirement))
                                         <div class="flex items-start">
-                                            <span class="text-blue-500 mr-2 mt-1">•</span>
+                                            <span class="text-blue-600 mr-2 mt-1">•</span>
                                             <span>{{ trim($requirement) }}</span>
                                         </div>
                                     @endif
@@ -112,15 +113,16 @@
                             </div>
                         @endif
 
+                        <!-- Company Info -->
                         <div class="border-t border-gray-200 pt-6 mt-8">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">About {{ $job->company_name }}</h2>
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-20 h-20 bg-blue-600 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-2xl font-bold">{{ substr($job->company_name, 0, 1) }}</span>
+                                <div class="w-20 h-20 bg-[#2A2D5A] rounded-lg flex items-center justify-center">
+                                    <span class="text-white text-2xl font-bold">  <i class="fas fa-map-marker-alt mr-1"></i></span>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ $job->company_name }}</h3>
-                                    <p class="text-sm text-gray-500">{{ $job->location }}</p>
+                                    <h3 class="text-lg font-semibold text-gray-900"> {{ $job->location }}</h3>
+
                                 </div>
                             </div>
                         </div>
