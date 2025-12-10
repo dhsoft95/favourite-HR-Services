@@ -1,24 +1,15 @@
 <div>
     <section class="relative h-[400px] lg:h-[450px] overflow-hidden">
-        <!-- Background Image -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
              style="background-image: url('/images/about/job-list.jpg');">
-            <!-- Enhanced overlay for better text readability -->
             <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
         </div>
 
-        <!-- Content -->
         <div class="relative h-full">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
                 <div class="flex items-center h-full">
                     <div class="max-w-4xl">
-                        <h1 class="text-white leading-tight mb-6 drop-shadow-lg"
-                            style="font-family: Inter;
-                               font-weight: 600;
-                               font-size: 60px;
-                               line-height: 72px;
-                               letter-spacing: -0.02em;
-                               max-width: 100%;">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight mb-6 drop-shadow-lg">
                             {{ $job->title }}
                         </h1>
                         <p class="text-lg lg:text-xl text-white/95 leading-relaxed max-w-lg drop-shadow-md">
@@ -34,14 +25,11 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                <!-- Main Content -->
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-lg shadow-sm p-8">
 
-                        <!-- Job Header -->
                         <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-8">
                             <div class="flex items-start mb-4 sm:mb-0">
-                                <!-- Company Logo -->
                                 <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                                     <span class="text-white text-xl font-bold">{{ substr($job->company_name, 0, 1) }}</span>
                                 </div>
@@ -59,7 +47,6 @@
                                 </div>
                             </div>
 
-                            <!-- Action Buttons -->
                             <div class="flex items-center gap-3">
                                 <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                                     <i class="far fa-bookmark text-gray-600"></i>
@@ -88,7 +75,6 @@
                             </div>
                         </div>
 
-                        <!-- Job Description -->
                         <div class="mb-8">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Job Description</h2>
                             <div class="text-gray-600 leading-relaxed prose max-w-none">
@@ -96,7 +82,6 @@
                             </div>
                         </div>
 
-                        <!-- Requirements -->
                         <div class="mb-8">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Requirements</h2>
                             <div class="text-gray-600 leading-relaxed space-y-3">
@@ -111,7 +96,6 @@
                             </div>
                         </div>
 
-                        <!-- Benefits -->
                         @if($job->benefits)
                             <div class="mb-8">
                                 <h2 class="text-xl font-bold text-gray-900 mb-4">Benefits</h2>
@@ -128,7 +112,6 @@
                             </div>
                         @endif
 
-                        <!-- Company Info -->
                         <div class="border-t border-gray-200 pt-6 mt-8">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">About {{ $job->company_name }}</h2>
                             <div class="flex items-center gap-4 mb-4">
@@ -144,13 +127,10 @@
                     </div>
                 </div>
 
-                <!-- Sidebar -->
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-lg shadow-sm p-6 sticky top-6">
 
-                        <!-- Key Information Cards -->
                         <div class="space-y-4 mb-6">
-                            <!-- Deadline Card -->
                             <div class="bg-red-50 border border-red-100 rounded-lg p-4">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -162,7 +142,6 @@
                                 <p class="text-xs text-gray-500 mt-2">{{ $job->deadline->diffForHumans() }}</p>
                             </div>
 
-                            <!-- Location Card -->
                             <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
@@ -172,7 +151,6 @@
                             </div>
                         </div>
 
-                        <!-- Job Details -->
                         <div class="mb-6">
                             <h3 class="font-semibold text-gray-900 mb-3">Job Details</h3>
                             <div class="space-y-3 text-sm">
@@ -190,7 +168,7 @@
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-500">Category:</span>
-                                    <span class="font-medium text-gray-900">{{ $job->category }}</span>
+                                    <span class="font-medium text-gray-900">{{ optional($job->category)->name ?? 'N/A' }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-500">Applications:</span>
@@ -199,7 +177,6 @@
                             </div>
                         </div>
 
-                        <!-- Share Section -->
                         <div class="pt-4 border-t border-gray-200">
                             <h3 class="font-semibold text-gray-900 mb-3">Share this job</h3>
                             <div class="flex flex-col gap-3">
@@ -233,7 +210,6 @@
                             </div>
                         </div>
 
-                        <!-- Back to Jobs Button -->
                         <div class="mt-6">
                             <a href="{{ route('jobs') }}"
                                wire:navigate
