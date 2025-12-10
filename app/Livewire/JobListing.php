@@ -146,14 +146,18 @@ class JobListing extends Component
 
     private function getFilterCounts(): array
     {
-        $baseQuery = $this->getBaseQuery();
+        $baseConditions = [
+            ['status', '=', 'published'],
+            ['is_active', '=', true],
+            ['deadline', '>=', now()]
+        ];
 
         return [
-            'jobTypes' => $baseQuery->clone()
+            'jobTypes' => Job::where($baseConditions)
                 ->selectRaw('job_type, count(*) as count')
                 ->groupBy('job_type')
                 ->pluck('count', 'job_type'),
-            'categories' => $baseQuery->clone()
+            'categories' => Job::where($baseConditions)
                 ->selectRaw('category_id, count(*) as count')
                 ->groupBy('category_id')
                 ->pluck('count', 'category_id')
