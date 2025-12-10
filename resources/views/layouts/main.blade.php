@@ -45,7 +45,9 @@
     <style>
         /* Global Inter Font */
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            body, h1, h2, h3, h4, h5, h6, p, span, div, a, input, textarea, button, select {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            }
         }
 
         /* Shimmer Loading Overlay */
