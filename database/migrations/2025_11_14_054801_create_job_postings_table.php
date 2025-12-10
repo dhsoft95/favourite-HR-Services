@@ -10,16 +10,16 @@ return new class extends Migration
     {
         Schema::create('job_postings', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('company_name');
-            $table->text('description');
-            $table->text('requirements');
+            $table->string('title')->nullable();
+            $table->string('company_name')->nullable();
+            $table->text('description')->nullable();
+            $table->text('requirements')->nullable();
             $table->text('benefits')->nullable();
-            $table->string('job_type'); // Full Time, Part Time, Remote, etc.
-            $table->string('category'); // IT, Finance, Healthcare, etc.
-            $table->string('location');
-            $table->string('experience_level'); // Entry, Mid, Senior
-            $table->date('deadline');
+            $table->string('job_type')->nullable();
+            $table->string('category')->nullable();
+            $table->string('location')->nullable();
+            $table->string('experience_level')->nullable();
+            $table->date('deadline')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

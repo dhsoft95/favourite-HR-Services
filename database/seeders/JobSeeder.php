@@ -15,6 +15,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Senior Laravel Developer',
                 'company_name' => 'Tech Solutions Ltd',
+                'image' => 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>We are seeking an experienced Laravel Developer to join our dynamic team. The ideal candidate will have strong expertise in PHP, Laravel framework, and modern web development practices.</p><p>You will be responsible for developing and maintaining web applications, working with cross-functional teams, and ensuring high-quality code delivery.</p>',
                 'requirements' => '• 5+ years of experience with PHP and Laravel
 - Strong understanding of MVC architecture
@@ -44,6 +45,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Digital Marketing Manager',
                 'company_name' => 'Creative Agency Co',
+                'image' => 'https://images.unsplash.com/photo-1553484771-371a605b060b?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Join our innovative marketing team as a Digital Marketing Manager. You will lead our digital marketing initiatives, develop strategies, and drive online engagement for our diverse client portfolio.</p>',
                 'requirements' => '• Bachelor\'s degree in Marketing or related field
 - 3+ years of digital marketing experience
@@ -70,6 +72,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Registered Nurse',
                 'company_name' => 'City Medical Center',
+                'image' => 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>We are looking for a compassionate and skilled Registered Nurse to provide high-quality patient care in our medical facility. The ideal candidate will work collaboratively with our healthcare team.</p>',
                 'requirements' => '• Valid nursing license
 - Bachelor\'s degree in Nursing
@@ -96,6 +99,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Financial Analyst',
                 'company_name' => 'Global Finance Group',
+                'image' => 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Seeking a detail-oriented Financial Analyst to join our finance team. You will be responsible for financial planning, analysis, and reporting to support strategic business decisions.</p>',
                 'requirements' => '• Bachelor\'s degree in Finance, Accounting, or Economics
 - 3+ years of financial analysis experience
@@ -122,6 +126,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Remote Customer Support Specialist',
                 'company_name' => 'E-Commerce Solutions',
+                'image' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Work from anywhere as a Customer Support Specialist. Provide exceptional customer service, resolve inquiries, and ensure customer satisfaction for our growing e-commerce platform.</p>',
                 'requirements' => '• 1-2 years customer service experience
 - Excellent written and verbal communication
@@ -148,6 +153,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'HR Administrator',
                 'company_name' => 'Corporate Services Ltd',
+                'image' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Join our HR team as an Administrator. You will support various HR functions including recruitment, onboarding, employee relations, and HR documentation.</p>',
                 'requirements' => '• Bachelor\'s degree in Human Resources or related field
 - 1-3 years HR experience
@@ -176,6 +182,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Software Engineering Intern',
                 'company_name' => 'Tech Innovations',
+                'image' => 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Internship opportunity for computer science students to gain hands-on experience in software development. Work with experienced developers on real projects.</p>',
                 'requirements' => '• Currently pursuing Computer Science degree
 - Basic knowledge of programming languages
@@ -199,6 +206,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Sales Executive',
                 'company_name' => 'Premium Products Inc',
+                'image' => 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Seeking motivated Sales Executives to join our growing team. You will be responsible for generating leads, closing deals, and building client relationships.</p>',
                 'requirements' => '• 2+ years sales experience
 - Proven sales track record
@@ -226,6 +234,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Project Manager',
                 'company_name' => 'Construction Masters',
+                'image' => 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Experienced Project Manager needed for construction projects. This position has been filled.</p>',
                 'requirements' => '• 5+ years project management experience
 - PMP certification preferred
@@ -246,6 +255,7 @@ class JobSeeder extends Seeder
             [
                 'title' => 'Administrative Assistant',
                 'company_name' => 'Business Solutions Group',
+                'image' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=face',
                 'description' => '<p>Part-time Administrative Assistant to support office operations and administrative tasks.</p>',
                 'requirements' => '• High school diploma or equivalent
 - 1+ year office experience
