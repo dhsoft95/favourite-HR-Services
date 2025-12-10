@@ -159,7 +159,6 @@ class JobResource extends Resource
                     ->schema([
                         Forms\Components\RichEditor::make('description')
                             ->label('Job Description')
-                            ->required()
                             ->toolbarButtons([
                                 'bold',
                                 'bulletList',
