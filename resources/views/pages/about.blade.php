@@ -75,34 +75,36 @@
     <section class="py-10 lg:py-10 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div class="relative bg-black rounded-2xl overflow-hidden"
+            <div class="relative rounded-2xl overflow-hidden"
                  style="width: 1288px; height: 445px; max-width: 100%; margin: 0 auto;">
-                <div class="grid grid-cols-1 lg:grid-cols-2 h-full">
-                    <!-- Left Side - Image -->
-                    <div class="relative h-full">
-                        <img src="/images/about/leader.webp"
-                             alt="Theobald Sabi"
-                             class="w-full h-full object-cover">
-                    </div>
+                <!-- Background Image for entire section -->
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/about/about-two.png');"></div>
 
-                    <!-- Right Side - Content -->
+                <!-- Dark overlay -->
+                <div class="absolute inset-0 bg-black/60"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 h-full relative z-10">
+                    <!-- Left Side - Empty -->
+                    <div class="relative h-full"></div>
+
+                    <!-- Right Side - Content with transparent background -->
                     <div class="flex items-center p-8 lg:p-12">
                         <div class="text-white">
 
-                            <!-- Quote Icon -->
+                            <!-- Quote Icon (red) -->
                             <div class="mb-6">
-                                <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-16 h-16 text-red-600" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
                                 </svg>
                             </div>
 
-                            <!-- Testimonial Text with exact specifications -->
+                            <!-- Testimonial Text -->
                             <blockquote class="text-white mb-8"
                                         style="font-family: Inter;
-                                           font-weight: 800;
-                                           font-size: 20px;
-                                           line-height: 30px;
-                                           letter-spacing: 0px;">
+                                       font-weight: 800;
+                                       font-size: 20px;
+                                       line-height: 30px;
+                                       letter-spacing: 0px;">
                                 In these tough economic times, organizations cannot afford to pour funds or any resources into
                                 (or partner with) ordinary-trial-and-error companies that do not value excellence, professionalism, cost efficiency, time, and most important, the green concept.
                             </blockquote>
@@ -110,7 +112,7 @@
                             <!-- Attribution -->
                             <div class="text-gray-300">
                                 <p class="font-semibold text-white mb-1 text-lg">Anna Meela,</p>
-                                <p class="text-sm opacity-80">HR Director at Favorite HR Service</p>
+                                <p class="text-sm opacity-80">CEO</p>
                             </div>
                         </div>
                     </div>
@@ -190,26 +192,27 @@
                              style="font-family: Inter;">
                             <p class="mb-8 text-center">FHS is governed by its core values when performing daily activities. These values guide each decision and behaviour, shape culture, and define the character of the company.</p>
                             <div class="text-left max-w-4xl mx-auto">
+                                <p class="mb-4 font-semibold">At FHS, we:</p>
                                 <div class="space-y-6">
                                     <div class="flex items-start gap-3">
-                                        <div class="w-2 h-2 bg-[#3730a3] rounded-full mt-2 flex-shrink-0"></div>
+                                        <span class="flex-shrink-0">•</span>
                                         <p class="leading-relaxed">Act with highest level of honesty and integrity while performing every project</p>
                                     </div>
                                     <div class="flex items-start gap-3">
-                                        <div class="w-2 h-2 bg-[#3730a3] rounded-full mt-2 flex-shrink-0"></div>
+                                        <span class="flex-shrink-0">•</span>
                                         <p class="leading-relaxed">Highly worship clients as they are the purpose of whatever we do, and our success depends on our clients' satisfaction entirely</p>
                                     </div>
                                     <div class="flex items-start gap-3">
-                                        <div class="w-2 h-2 bg-[#3730a3] rounded-full mt-2 flex-shrink-0"></div>
+                                        <span class="flex-shrink-0">•</span>
                                         <p class="leading-relaxed">Value and embrace talents, leadership, and initiatives of each associate</p>
                                     </div>
                                     <div class="flex items-start gap-3">
-                                        <div class="w-2 h-2 bg-[#3730a3] rounded-full mt-2 flex-shrink-0"></div>
-                                        <p class="leading-relaxed">Worth doing things right first and actively learning from others</p>
+                                        <span class="flex-shrink-0">•</span>
+                                        <p class="leading-relaxed">Worth doing things right first and actively learning from others, and</p>
                                     </div>
                                     <div class="flex items-start gap-3">
-                                        <div class="w-2 h-2 bg-[#3730a3] rounded-full mt-2 flex-shrink-0"></div>
-                                        <p class="leading-relaxed">Extremely value and respect communities in which we live and work</p>
+                                        <span class="flex-shrink-0">•</span>
+                                        <p class="leading-relaxed">Extremely value and respect communities in which we live and work.</p>
                                     </div>
                                 </div>
                             </div>
@@ -222,11 +225,11 @@
 
 
     <!-- Hero Section with Cover Image & Play Button -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden"style="margin-bottom:0px;">
         <!-- Background Image/Video Cover -->
         <div class="absolute inset-0 z-0">
             <!-- Image Background -->
-            <img src="images/about/story.jpg"
+            <img src="images/about/video-cover.webp"
                  alt="FHS Team Collaboration"
                  class="w-full h-full object-cover object-center"
                  loading="eager">
@@ -235,7 +238,6 @@
             <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-gray-900/80 to-gray-900/90"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-gray-900/40"></div>
         </div>
-
         <!-- Content Container -->
         <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <!-- Play Button Container -->
@@ -368,8 +370,8 @@
     </script>
 
 
-
     @include('patrials.clients')
+    @include('patrials.trusted_brands')
 @endsection
 
 @section('footer')

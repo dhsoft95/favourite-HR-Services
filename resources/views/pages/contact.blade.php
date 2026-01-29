@@ -9,7 +9,7 @@
     <section class="relative h-[400px] lg:h-[450px] overflow-hidden">
         <!-- Background Image -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-             style="background-image: url('/images/cta-background.png');">
+             style="background-image: url('/images/cta-bg.webp');">
             <!-- Enhanced overlay for better text readability -->
             <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
         </div>
@@ -88,6 +88,7 @@
                         <p class="text-[#2A2D5A] font-medium">+255 683 383 132</p>
                         <p class="text-[#2A2D5A] font-medium">+255 767 636 871</p>
                         <p class="text-[#2A2D5A] font-medium">+255 710 287 676</p>
+                        <p class="text-[#2A2D5A] font-medium">+255 750 048 993</p>
                     </div>
                 </div>
 
@@ -107,17 +108,17 @@
 
             <!-- Map and Contact Form -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
                 <!-- Google Map Section -->
                 <div class="rounded-lg overflow-hidden shadow-sm">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.791715502087!2d39.2794!3d-6.7924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c4c56c5d4e5b1%3A0x5f9d9e8b2c3a4d6e!2sAlfa%20Plaza%2C%20Oysterbay%2C%20Dar%20es%20Salaam%2C%20Tanzania!5e0!3m2!1sen!2sus!4v1635789123456!5m2!1sen!2sus"
                         width="100%"
                         height="500"
-                        style="border:0;"
-                        allowfullscreen=""
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
+                        frameborder="0"
+                        scrolling="no"
+                        marginheight="0"
+                        marginwidth="0"
+                        id="gmap_canvas"
+                        src="https://maps.google.com/maps?width=1920&amp;height=400&amp;hl=en&amp;q=Alfa%20Plaza%20Formerly%20Jangid%20Plaza%20Dar%20es%20Salaam+(Alfa%20Plaza%20Formerly%20Jangid%20Plaza)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
                         class="w-full h-96 lg:h-full">
                     </iframe>
                 </div>
@@ -214,7 +215,7 @@
 
 
 
-    @include('patrials.clients')
+{{--    @include('patrials.clients')--}}
 @endsection
 
 @section('footer')

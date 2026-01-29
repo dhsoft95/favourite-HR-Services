@@ -108,10 +108,8 @@
                 </div>
                 <div class="p-4">
                     @php
-                        // Get IDs of jobs user has already applied to
                         $appliedJobIds = Auth::user()->applications()->pluck('job_id')->toArray();
 
-                        // Get available jobs excluding already applied ones
                         $availableJobs = \App\Models\Job::where('status', 'published')
                             ->where('is_active', true)
                             ->where('deadline', '>=', now())
@@ -147,7 +145,7 @@
                                                 </div>
                                                 <div>
                                                     <div class="text-xs font-medium text-gray-900">{{ $job->title }}</div>
-                                                    <div class="text-xs text-gray-500">{{ $job->category }}</div>
+                                                    <div class="text-xs text-gray-500">{{ is_string($job->category) ? $job->category : ($job->category->name ?? 'N/A') }}</div>
                                                 </div>
                                             </div>
                                         </td>

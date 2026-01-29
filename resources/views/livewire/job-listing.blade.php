@@ -2,7 +2,7 @@
     <section class="relative h-[400px] lg:h-[450px] overflow-hidden">
         <!-- Background Image -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-             style="background-image: url('/images/about/job-list.jpg');">
+             style="background-image: url('/images/about/jobs-bg.webp');">
             <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
         </div>
 

@@ -116,7 +116,7 @@ class UserResource extends Resource
                             ->label('System Role')
                             ->relationship('roles', 'name')
                             ->options(function () {
-                                if (auth()->user()->hasRole('super_admin')) {
+                                   if (auth()->user()->hasRole('super_admin')) {
                                     return [
                                         'super_admin' => 'Super Administrator',
                                         'hr_manager' => 'HR Manager',

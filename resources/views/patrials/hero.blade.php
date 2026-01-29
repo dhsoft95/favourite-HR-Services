@@ -220,7 +220,7 @@
         .search-button {
             font-family: 'Inter', sans-serif;
             padding: 0.75rem 1.5rem;
-            background: var(--primary-navy);
+            background: #312e81;
             color: white;
             border: none;
             border-radius: 0.375rem;
@@ -233,7 +233,7 @@
         }
 
         .search-button:hover {
-            background: #0f172a;
+            background: #44436c;
         }
 
         @keyframes slideInUp {
@@ -348,11 +348,11 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div class="text-center lg:text-left">
                         <h1 class="hero-title text-white leading-tight mb-6">
-                            Build Stronger Teams.<br>
-                            <span class="text-white">Empower People. Transform Workplaces</span>
+                            Build Stronger Teams<br>
+                            <span class="text-white">Empower People, Transform Workplaces</span>
                         </h1>
                         <p class="text-lg text-gray-200 mb-8 max-w-lg leading-relaxed">
-                            From talent acquisition to workforce solutions, we help companies cultivate thriving cultures where employees feel valued, supported, and ready to excel.
+                            From talent acquisition to workforce solutions, we help companies cultivate thriving cultures where employees feel valued, supported, and ready to excel
                         </p>
                         <div class="flex justify-center lg:justify-start">
                             <a href="/jobs" class="inline-flex items-center px-8 py-4 border-2 border-white text-white font-medium text-lg hover:bg-white hover:text-gray-900 transition duration-300 ease-in-out group">
@@ -387,41 +387,7 @@
         </button>
     </div>
 
-    <!-- Job Search Form -->
-{{--    <div class="search-form">--}}
-{{--        <div class="search-container">--}}
-{{--            <form class="form-grid">--}}
-{{--                <div class="form-group">--}}
-{{--                    <label for="job-title" class="form-label">Job Title</label>--}}
-{{--                    <input type="text" id="job-title" name="job_title" placeholder="Search..." class="form-input">--}}
-{{--                </div>--}}
-{{--                <div class="form-group">--}}
-{{--                    <label for="location" class="form-label">Location</label>--}}
-{{--                    <select id="location" name="location" class="form-select">--}}
-{{--                        <option value="">All Locations</option>--}}
-{{--                        <option value="dodoma">Dodoma</option>--}}
-{{--                        <option value="dar-es-salaam">Dar es Salaam</option>--}}
-{{--                        <option value="arusha">Arusha</option>--}}
-{{--                        <option value="mwanza">Mwanza</option>--}}
-{{--                        <option value="remote">Remote</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--                <div class="form-group">--}}
-{{--                    <label for="categories" class="form-label">Category</label>--}}
-{{--                    <select id="categories" name="categories" class="form-select">--}}
-{{--                        <option value="">All Categories</option>--}}
-{{--                        <option value="technology">Technology</option>--}}
-{{--                        <option value="finance">Finance</option>--}}
-{{--                        <option value="healthcare">Healthcare</option>--}}
-{{--                        <option value="marketing">Marketing</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--                <div class="form-group">--}}
-{{--                    <button type="submit" class="search-button">Search</button>--}}
-{{--                </div>--}}
-{{--            </form>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+
 
     <livewire:hero-job-search />
     <script>
@@ -432,6 +398,7 @@
             const nextBtn = document.getElementById('nextSlide');
             let currentSlide = 0;
             let autoPlayInterval;
+            const slideSpeed = 20000;
 
             function showSlide(index) {
                 slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
@@ -449,14 +416,13 @@
             }
 
             function startAutoPlay() {
-                autoPlayInterval = setInterval(nextSlide, 5000);
+                autoPlayInterval = setInterval(nextSlide, slideSpeed);
             }
 
             function stopAutoPlay() {
                 clearInterval(autoPlayInterval);
             }
 
-            // Event listeners
             nextBtn?.addEventListener('click', () => { nextSlide(); stopAutoPlay(); startAutoPlay(); });
             prevBtn?.addEventListener('click', () => { prevSlide(); stopAutoPlay(); startAutoPlay(); });
 
@@ -469,7 +435,6 @@
                 });
             });
 
-            // Touch events
             let touchStartX = 0;
             const slider = document.querySelector('.hero-slider');
 
@@ -484,10 +449,8 @@
                 }
             }, { passive: true });
 
-            // Auto play
             startAutoPlay();
 
-            // Pause on visibility change
             document.addEventListener('visibilitychange', () => {
                 document.visibilityState === 'visible' ? startAutoPlay() : stopAutoPlay();
             });
