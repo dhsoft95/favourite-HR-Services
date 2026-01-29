@@ -122,7 +122,6 @@
                         class="w-full h-96 lg:h-full">
                     </iframe>
                 </div>
-
                 <!-- Contact Form -->
                 <div class="bg-white">
                     <form class="space-y-6">
