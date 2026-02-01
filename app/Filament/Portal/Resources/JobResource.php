@@ -87,7 +87,26 @@ class JobResource extends Resource
                             ])
                             ->maxSize(2048)
                             ->helperText('Upload job cover image. Recommended: 400x400px (square) or 800x450px (landscape). Maximum file size: 2MB. Supported formats: JPG, PNG, WebP.')
-                            ->columnSpan(4),
+                            ->columnSpan(4)
+                            ->saveUploadedFileUsing(function ($file, $set, $get) {
+                                \Log::info('File upload started', [
+                                    'original_name' => $file->getClientOriginalName(),
+                                    'size' => $file->getSize(),
+                                    'mime' => $file->getMimeType(),
+                                ]);
+
+                                try {
+                                    $path = $file->store('job-images', 'public');
+                                    \Log::info('File uploaded successfully', ['path' => $path]);
+                                    return $path;
+                                } catch (\Exception $e) {
+                                    \Log::error('File upload failed', [
+                                        'error' => $e->getMessage(),
+                                        'trace' => $e->getTraceAsString()
+                                    ]);
+                                    throw $e;
+                                }
+                            }),
 
                         Forms\Components\Select::make('job_type')
                             ->label('Employment Type')
