@@ -43,26 +43,15 @@
                             With extensive experience, skills, and knowledge, FHS uses advanced technology to identify, capture, and select suitable candidates that fit clients' criteria. We are trusted for meeting or surpassing customers' needs by supplying reliable and retainable workforce.
                         </p>
                         <div class="bg-white rounded-xl p-6 shadow-md">
-                            <h3 class="text-xl font-semibold mb-4" style="color: #151457;">Industries We Serve</h3>
+                            <h3 class="text-xl font-semibold mb-4" style="color: #151457;">We recruit for</h3>
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Telecom</span>
+                                    <span class="font-medium text-sm">Non Executive Position</span>
                                 </div>
                                 <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Health</span>
+                                    <span class="font-medium text-sm">Executive Position</span>
                                 </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Insurance</span>
-                                </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Academic</span>
-                                </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Finance</span>
-                                </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Printing</span>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -206,15 +195,15 @@
                         <div class="bg-white rounded-xl p-6 shadow-md">
                             <h3 class="text-xl font-semibold mb-4" style="color: #151457;">Survey Analysis</h3>
                             <div class="grid grid-cols-1 gap-3">
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Geographic Areas Analysis</span>
-                                </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Industry Standards Research</span>
-                                </div>
-                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
-                                    <span class="font-medium text-sm">Role Classifications</span>
-                                </div>
+{{--                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">--}}
+{{--                                    <span class="font-medium text-sm">Geographic Areas Analysis</span>--}}
+{{--                                </div>--}}
+{{--                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">--}}
+{{--                                    <span class="font-medium text-sm">Industry Standards Research</span>--}}
+{{--                                </div>--}}
+{{--                                <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">--}}
+{{--                                    <span class="font-medium text-sm">Role Classifications</span>--}}
+{{--                                </div>--}}
                                 <div class="p-3 rounded-lg border-l-4" style="background-color: rgba(21, 20, 87, 0.05); border-color: #151457;">
                                     <span class="font-medium text-sm">Wage Trends Identification</span>
                                 </div>

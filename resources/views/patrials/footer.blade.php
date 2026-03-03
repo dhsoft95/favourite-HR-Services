@@ -85,7 +85,7 @@
                     <li><a href="{{ route('solutions') }}" class="transition-colors {{ request()->routeIs('solutions') ? 'text-[rgb(212,54,46)] font-semibold' : 'text-gray-300 hover:text-white' }} class="text-gray-300 hover:text-white transition-colors">Salary & Benefits</a></li>
                     <li><a href="{{ route('solutions') }}" class="transition-colors {{ request()->routeIs('solutions') ? 'text-[rgb(212,54,46)] font-semibold' : 'text-gray-300 hover:text-white' }}class="text-gray-300 hover:text-white transition-colors">HR Audit</a></li>
                     <li><a href="{{ route('solutions') }}" class="transition-colors {{ request()->routeIs('solutions') ? 'text-[rgb(212,54,46)] font-semibold' : 'text-gray-300 hover:text-white' }}class="text-gray-300 hover:text-white transition-colors">Job Analysis, Documentation & Evaluation</a></li>
-                    <li><a href="{{ route('solutions') }}" class="transition-colors {{ request()->routeIs('solutions') ? 'text-[rgb(212,54,46)] font-semibold' : 'text-gray-300 hover:text-white' }}class="text-gray-300 hover:text-white transition-colors">Outsourcing</a></li>
+{{--                    <li><a href="{{ route('solutions') }}" class="transition-colors {{ request()->routeIs('solutions') ? 'text-[rgb(212,54,46)] font-semibold' : 'text-gray-300 hover:text-white' }}class="text-gray-300 hover:text-white transition-colors">Outsourcing</a></li>--}}
                 </ul>
             </div>
 

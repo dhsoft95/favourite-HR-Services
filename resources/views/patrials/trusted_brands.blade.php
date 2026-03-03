@@ -11,9 +11,9 @@
                         Let us hear what you need, and we'll call you back!
                     </h2>
 
-                    <button class="group inline-flex items-center gap-3 px-8 py-4 bg-transparent text-white font-semibold rounded-xl border-2 border-white hover:bg-white hover:text-gray-900 transition-all duration-300">
+                    <a href="/contact" class="group inline-flex items-center gap-3 px-8 py-4 bg-transparent text-white font-semibold rounded-xl border-2 border-white hover:bg-white hover:text-gray-900 transition-all duration-300">
                         Contact Us
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

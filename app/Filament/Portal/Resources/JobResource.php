@@ -137,13 +137,9 @@ class JobResource extends Resource
                                             ->required()
                                             ->maxLength(255)
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                                if ($operation !== 'create') {
-                                                    return;
-                                                }
+                                            ->afterStateUpdated(function ($state, Forms\Set $set) {
                                                 $set('slug', \Illuminate\Support\Str::slug($state));
                                             }),
-
                                         Forms\Components\TextInput::make('slug')
                                             ->label('URL Slug')
                                             ->required()

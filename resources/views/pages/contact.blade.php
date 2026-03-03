@@ -101,7 +101,7 @@
                     <div class="text-gray-600 text-sm">
                         <p class="mb-2">Send inquiries via email</p>
                         <p class="text-[#2A2D5A] font-medium">fhs@favoritegroup.co.tz</p>
-                        <p class="text-[#2A2D5A] font-medium">jobs@favoritegroup.co.tz</p>
+                        <p class="text-[#2A2D5A] font-medium">info@favoritegroup.co.tz</p>
                     </div>
                 </div>
             </div>

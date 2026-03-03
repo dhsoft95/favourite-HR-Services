@@ -20,15 +20,10 @@ use Illuminate\Support\Facades\Storage;
 class ApplicationResource extends Resource
 {
     protected static ?string $model = Application::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
     protected static ?string $navigationLabel = 'Applications';
-
     protected static ?string $navigationGroup = 'Job Management';
-
     protected static ?string $recordTitleAttribute = 'user.name';
-
     public static function canCreate(): bool
     {
         return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
@@ -315,7 +310,6 @@ class ApplicationResource extends Resource
                         $record->status === 'profiled' &&
                         auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])
                     ),
-
                 Tables\Actions\Action::make('schedule_interview')
                     ->icon('heroicon-o-calendar')
                     ->color('primary')
@@ -688,7 +682,6 @@ class ApplicationResource extends Resource
     {
         return static::getModel()::where('status', 'pending')->count();
     }
-
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';

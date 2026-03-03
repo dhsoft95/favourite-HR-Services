@@ -348,7 +348,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div class="text-center lg:text-left">
                         <h1 class="hero-title text-white leading-tight mb-6">
-                            Build Stronger Teams<br>
+                            Build Stronger Teams,<br>
                             <span class="text-white">Empower People, Transform Workplaces</span>
                         </h1>
                         <p class="text-lg text-gray-200 mb-8 max-w-lg leading-relaxed">
