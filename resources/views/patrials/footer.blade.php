@@ -4,29 +4,6 @@
     <div class="border-b border-gray-600">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <div class="text-white font-bold text-xl">
-                        <div class="flex items-center space-x-2">
-{{--                            <span class="text-2xl">FH</span>--}}
-                            <div class="text-sm leading-tight">
-                                <img src="/images/logo/HR-Logo-White.png" alt="Favourite Web Services" class="h-10 w-auto">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Newsletter Signup -->
-                <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                    <input
-                        type="email"
-                        placeholder="Enter your email to subscribe to our newsletter"
-                        class="flex-1 px-4 py-3 bg-transparent border border-gray-400 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:border-white transition-colors"
-                    >
-                    <button class="px-6 py-3 bg-white text-[#2A2D5A] font-semibold rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
-                        Subscribe
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -131,19 +108,28 @@
 
     <!-- Bottom Footer -->
     <div class="border-t border-gray-600">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <!-- Copyright -->
-                <div class="text-gray-400 text-sm">
-                    © FHS - 2025
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-                <!-- Legal Links -->
-{{--                <div class="flex flex-wrap gap-6 text-sm">--}}
-{{--                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Data Privacy Statement</a>--}}
-{{--                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms & Condition</a>--}}
-{{--                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Website Terms of Use</a>--}}
-{{--                </div>--}}
+            <!-- Logo -->
+            <div class="flex justify-center mb-4">
+                <img src="images/logo/HR-Logo-White.png" alt="FHS Logo" class="h-12 w-auto">
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center text-gray-400 text-sm mb-6">
+                <p>© FHS - 2025. All rights reserved.</p>
+                <p class="mt-1 text-gray-500 text-xs">Favourite HR Services Ltd · Dar es Salaam, Tanzania</p>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-700 mb-6"></div>
+
+            <!-- Social + Bottom Row -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+
+                <div class="text-gray-500 text-xs">
+                    Connecting talent with opportunity across Africa.
+                </div>
 
                 <!-- Social Media Icons -->
                 <div class="flex gap-4">
@@ -169,6 +155,7 @@
                     </a>
                 </div>
             </div>
+
         </div>
     </div>
 </footer>

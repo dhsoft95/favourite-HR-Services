@@ -225,60 +225,56 @@
 
 
     <!-- Hero Section with Cover Image & Play Button -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden"style="margin-bottom:0px;">
-        <!-- Background Image/Video Cover -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden" style="margin-bottom:0px;">
+
+        <!-- Slider Background -->
         <div class="absolute inset-0 z-0">
-            <!-- Image Background -->
-            <img src="images/about/video-cover.webp"
-                 alt="FHS Team Collaboration"
-                 class="w-full h-full object-cover object-center"
-                 loading="eager">
+            <div id="heroSlider" class="relative w-full h-full">
 
-            <!-- Overlay for better text readability -->
-            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-gray-900/80 to-gray-900/90"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-gray-900/40"></div>
-        </div>
-        <!-- Content Container -->
-        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <!-- Play Button Container -->
-            <div class="mb-12 lg:mb-16">
-                <button id="playButton"
-                        class="group relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white/20 backdrop-blur-sm rounded-full border-2 border-white/30 hover:border-white/50 transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-white/30">
+                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-100">
+                    <img src="images/slider/slider01.webp" alt="Slide 1" class="w-full h-full object-cover object-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
+                </div>
 
-                    <!-- Animated Ripple Effect -->
-                    <div class="absolute inset-0 rounded-full animate-ping bg-white/20 group-hover:bg-white/30"></div>
+{{--                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">--}}
+{{--                    <img src="images/slider/slider03.webp" alt="Slide 2" class="w-full h-full object-cover object-center">--}}
+{{--                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>--}}
+{{--                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>--}}
+{{--                </div>--}}
 
-                    <!-- Play Icon -->
-                    <div class="relative flex items-center justify-center w-full h-full">
-                        <svg class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white ml-1"
-                             fill="currentColor"
-                             viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                    </div>
-
-                    <!-- Tooltip Text -->
-                    <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                    Watch Our Story
-                </span>
-                </button>
+                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
+                    <img src="images/slider/slider02.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
+                </div>
+                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
+                    <img src="images/slider/slider04.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
+                </div>
+                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
+                    <img src="images/slider/slider05.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
+                </div>
             </div>
-
-            <!-- Main Text Content -->
-            <div class="space-y-6">
-                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight"
-                    style="font-family: 'Inter', sans-serif;">
-                    Discover the Heart of FHS
-                </h1>
-
-                <p class="text-xl sm:text-2xl lg:text-3xl text-gray-200 max-w-3xl mx-auto leading-relaxed"
-                   style="font-family: 'Inter', sans-serif; font-weight: 300;">
-                    Transforming human potential into sustainable business growth.
-                </p>
-            </div>
-
-
         </div>
+
+        <!-- Prev / Next Arrows -->
+        <button id="prevSlide"
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/40 transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+
+        <button id="nextSlide"
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/40 transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
 
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
@@ -290,34 +286,40 @@
                 </svg>
             </a>
         </div>
-
-        <!-- Video Modal (Hidden by default) -->
-        <div id="videoModal"
-             class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4">
-            <div class="relative w-full max-w-4xl">
-                <!-- Close Button -->
-                <button id="closeModal"
-                        class="absolute -top-12 right-0 text-white hover:text-amber-400 transition-colors duration-300">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-
-                <!-- Video Container -->
-                <div class="relative aspect-video bg-black rounded-lg overflow-hidden">
-                    <iframe id="videoPlayer"
-                            class="absolute inset-0 w-full h-full"
-                            src=""
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            loading="lazy">
-                    </iframe>
-                </div>
-            </div>
-        </div>
     </section>
 
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let current  = 0;
+        let timer    = null;
+
+        function goTo(index) {
+            slides[current].classList.remove('opacity-100');
+            slides[current].classList.add('opacity-0');
+
+            current = (index + slides.length) % slides.length;
+
+            slides[current].classList.remove('opacity-0');
+            slides[current].classList.add('opacity-100');
+        }
+
+        function next() { goTo(current + 1); }
+        function prev() { goTo(current - 1); }
+
+        function startTimer() {
+            timer = setInterval(next, 5000);
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            startTimer();
+        }
+
+        document.getElementById('nextSlide').addEventListener('click', () => { next(); resetTimer(); });
+        document.getElementById('prevSlide').addEventListener('click', () => { prev(); resetTimer(); });
+
+        startTimer();
+    </script>
     <script>
         // Video Modal Functionality
         const playButton = document.getElementById('playButton');
