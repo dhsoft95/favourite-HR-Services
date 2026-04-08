@@ -500,6 +500,51 @@
     }
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+        let current = 0;
+        let timer;
+        const speed = 6000;
+
+        function show(index) {
+            slides.forEach((s, i) => s.classList.toggle('active', i === index));
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        function next() { current = (current + 1) % slides.length; show(current); }
+        function prev() { current = (current - 1 + slides.length) % slides.length; show(current); }
+        function start() { timer = setInterval(next, speed); }
+        function stop() { clearInterval(timer); }
+        function reset() { stop(); start(); }
+
+        nextBtn?.addEventListener('click', () => { next(); reset(); });
+        prevBtn?.addEventListener('click', () => { prev(); reset(); });
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { current = i; show(current); reset(); });
+        });
+
+        let touchStartX = 0;
+        const slider = document.getElementById('heroSlider');
+
+        slider?.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        slider?.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); reset(); }
+        }, { passive: true });
+
+        document.addEventListener('visibilitychange', () => {
+            document.visibilityState === 'visible' ? start() : stop();
+        });
+
+        start();
+    });
+</script>
+
 <x-toast-notification />
 </body>
 </html>

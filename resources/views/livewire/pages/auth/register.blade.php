@@ -46,10 +46,10 @@ new #[Layout('layouts.guest')] class extends Component
 <div class="min-h-screen flex items-center justify-center bg-gray-100 py-8 relative">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80"
+        <img src="{{ asset('images/slider/slider01.webp') }}"
              alt="Background"
              class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-900/40 to-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-[#2A2D5A]/70 to-black/60"></div>
     </div>
 
     <div class="w-full max-w-4xl px-4 relative z-10">
@@ -58,7 +58,7 @@ new #[Layout('layouts.guest')] class extends Component
             <div class="px-12 py-16">
                 <!-- Header -->
                 <div class="text-center mb-10">
-                    <div class="mx-auto h-16 w-16 flex items-center justify-center bg-red-600 rounded-xl mb-4">
+                    <div class="mx-auto h-16 w-16 flex items-center justify-center bg-[#2A2D5A] rounded-xl mb-4">
                         <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
@@ -163,7 +163,7 @@ new #[Layout('layouts.guest')] class extends Component
                     <!-- Submit -->
                     <button
                         type="submit"
-                        class="w-full mt-8 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors text-base">
+                        class="w-full mt-8 bg-[#2A2D5A] hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors text-base">
                         Register
                     </button>
                 </form>

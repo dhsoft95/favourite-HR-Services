@@ -32,3 +32,11 @@ Route::get('/jobs/{id}', [PagesController::class, 'jobsDetails'])->name('jobs-de
 
 
 require __DIR__.'/auth.php';
+
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout')->middleware('auth');
