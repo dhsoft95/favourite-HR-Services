@@ -614,7 +614,8 @@ class ApplicationResource extends Resource
 
                         Infolists\Components\TextEntry::make('job.category')
                             ->label('Category')
-                            ->badge(),
+                            ->badge()
+                            ->formatStateUsing(fn ($state) => is_array($state) ? $state['name'] : $state),
 
                         Infolists\Components\TextEntry::make('job.location')
                             ->label('Location')
