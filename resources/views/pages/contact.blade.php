@@ -89,6 +89,7 @@
                         <p class="text-[#2A2D5A] font-medium">+255 767 636 871</p>
                         <p class="text-[#2A2D5A] font-medium">+255 710 287 676</p>
                         <p class="text-[#2A2D5A] font-medium">+255 750 048 993</p>
+                        <p class="text-[#2A2D5A] font-medium">+255 702 664 487</p>
                     </div>
                 </div>
 

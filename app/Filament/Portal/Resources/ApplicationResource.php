@@ -612,11 +612,9 @@ class ApplicationResource extends Resource
                                 'Contract' => 'primary',
                             }),
 
-                        Infolists\Components\TextEntry::make('job.category')
+                        Infolists\Components\TextEntry::make('job.category.name')
                             ->label('Category')
-                            ->badge()
-                            ->formatStateUsing(fn ($state) => is_array($state) ? $state['name'] : $state),
-
+                            ->badge(),
                         Infolists\Components\TextEntry::make('job.location')
                             ->label('Location')
                             ->icon('heroicon-o-map-pin'),

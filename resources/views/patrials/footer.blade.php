@@ -87,6 +87,7 @@
                         <a href="tel:+255767636871" class="block text-white hover:text-gray-300 transition-colors">+255 767 636 871</a>
                         <a href="tel:+255710287676" class="block text-white hover:text-gray-300 transition-colors">+255 710 287 676</a>
                         <a href="tel:+255710287676" class="block text-white hover:text-gray-300 transition-colors">+255 750 048 993</a>
+                        <a href="tel:+255710287676" class="block text-white hover:text-gray-300 transition-colors">+255 702 664 487</a>
                     </div>
                 </div>
             </div>
