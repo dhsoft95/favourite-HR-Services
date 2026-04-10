@@ -119,7 +119,7 @@
             <!-- Copyright -->
             <div class="text-center text-gray-400 text-sm mb-6">
                 <p>© FHS - 2025. All rights reserved.</p>
-                <p class="mt-1 text-gray-500 text-xs">Favourite HR Services Ltd · Dar es Salaam, Tanzania</p>
+                <p class="mt-1 text-gray-500 text-xs">Favorite HR Services Ltd · Dar es Salaam, Tanzania</p>
             </div>
 
             <!-- Divider -->

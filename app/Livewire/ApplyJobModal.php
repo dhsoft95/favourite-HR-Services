@@ -71,7 +71,8 @@ class ApplyJobModal extends Component
             ]);
 
             // Store CV
-            $cvPath = $this->cv->store('cvs', 'public');
+            $fileName = str(auth()->user()->name)->slug() . '-cv-' . time() . '.' . $this->cv->getClientOriginalExtension();
+            $cvPath = $this->cv->storeAs('cvs', $fileName, 'public');
 
             // Create application
             $application = Application::create([

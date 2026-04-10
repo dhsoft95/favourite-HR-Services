@@ -6,11 +6,10 @@
 @endsection
 
 @section('content')
-    <section class="relative h-[500px] lg:h-[500px] overflow-hidden">
+    <section class="relative h-[300px] sm:h-[400px] lg:h-[500px] overflow-hidden">
         <!-- Background Image -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
              style="background-image: url('/images/about/about.png');">
-            <!-- Enhanced overlay for better text readability -->
             <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
         </div>
 
@@ -18,19 +17,13 @@
         <div class="relative h-full">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
                 <div class="flex items-center h-full">
-                    <div class="max-w-4xl">
-                        <h1 class="text-white leading-tight mb-6 drop-shadow-lg"
-                            style="font-family: Inter;
-                               font-weight: 600;
-                               font-size: 60px;
-                               line-height: 72px;
-                               letter-spacing: -0.02em;
-                               width: 1476px;
-                               max-width: 100%;">
+                    <div class="max-w-xl lg:max-w-4xl">
+                        <h1 class="text-white font-semibold leading-tight mb-4 lg:mb-6 drop-shadow-lg
+                               text-4xl sm:text-5xl lg:text-6xl tracking-tight">
                             About Favorite<br>
                             HR Services
                         </h1>
-                        <p class="text-lg lg:text-xl text-white/95 leading-relaxed max-w-lg drop-shadow-md">
+                        <p class="text-base sm:text-lg lg:text-xl text-white/95 leading-relaxed max-w-lg drop-shadow-md">
                             Your trusted partner in modern, results-driven HR solutions.
                         </p>
                     </div>
@@ -74,44 +67,25 @@
 
     <section class="py-10 lg:py-10 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <div class="relative rounded-2xl overflow-hidden"
-                 style="width: 1288px; height: 445px; max-width: 100%; margin: 0 auto;">
-                <!-- Background Image for entire section -->
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/about/about-two.png');"></div>
+            <div class="relative rounded-2xl overflow-hidden min-h-[300px] sm:min-h-[380px] lg:h-[445px]">
+                <!-- Background Image -->
+                <div class="absolute inset-0 bg-cover bg-center"
+                     style="background-image: url('/images/about/about-two.png');"></div>
 
                 <!-- Dark overlay -->
                 <div class="absolute inset-0 bg-black/60"></div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 h-full relative z-10">
-                    <!-- Left Side - Empty -->
-                    <div class="relative h-full"></div>
+                    <!-- Left Side - Hidden on mobile -->
+                    <div class="hidden lg:block relative h-full"></div>
 
-                    <!-- Right Side - Content with transparent background -->
-                    <div class="flex items-center p-8 lg:p-12">
+                    <!-- Right Side -->
+                    <div class="flex items-center p-6 sm:p-8 lg:p-12">
                         <div class="text-white">
-
-                            <!-- Quote Icon (red) -->
-{{--                            <div class="mb-6">--}}
-{{--                                <svg class="w-16 h-16 text-red-600" fill="currentColor" viewBox="0 0 24 24">--}}
-{{--                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>--}}
-{{--                                </svg>--}}
-{{--                            </div>--}}
-
-                            <!-- Testimonial Text -->
-                            <blockquote class="text-white mb-8"
-                                        style="font-family: Inter;
-                                       font-weight: 800;
-                                       font-size: 20px;
-                                       line-height: 30px;
-                                       letter-spacing: 0px;">
-
-                                “ In these tough economic times, organizations cannot afford to pour funds or any resources into (or partner with) ordinary trial-and-error companies that do not value excellence, professionalism, cost efficiency, time, and most important, the green concept.”
+                            <blockquote class="text-white mb-6 font-extrabold text-base sm:text-lg lg:text-xl leading-relaxed">
+                                " In these tough economic times, organizations cannot afford to pour funds or any resources into (or partner with) ordinary trial-and-error companies that do not value excellence, professionalism, cost efficiency, time, and most important, the green concept."
                             </blockquote>
-
-                            <!-- Attribution -->
                             <div class="text-gray-300">
-{{--                                <p class="font-semibold text-white mb-1 text-lg">Anna Meela,</p>--}}
                                 <p class="text-sm opacity-80">CEO</p>
                             </div>
                         </div>

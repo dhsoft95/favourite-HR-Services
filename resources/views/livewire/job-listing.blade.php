@@ -1,11 +1,13 @@
 <div>
     <section class="relative h-[300px] sm:h-[350px] lg:h-[450px] overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-             style="background-image: url('/images/about/jobs-bg.webp');">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
-        </div>
+        <img src="/images/about/jobs-bg.webp"
+             alt=""
+             class="absolute inset-0 w-full h-full object-cover sm:object-center"
+             style="object-position: 70% center;">
 
-        <div class="relative h-full">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+
+        <div class="relative z-10 h-full">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
                 <div class="flex items-center h-full">
                     <div class="max-w-4xl">
@@ -26,7 +28,6 @@
             </div>
         </div>
     </section>
-
     <section class="py-6 lg:py-8 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
