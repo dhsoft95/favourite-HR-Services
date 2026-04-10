@@ -113,7 +113,7 @@
 
             <!-- Logo -->
             <div class="flex justify-center mb-4">
-                <img src="images/logo/HR-Logo-White.png" alt="FHS Logo" class="h-12 w-auto">
+                <img src="images/logo/logo-white.png" alt="FHS Logo" class="h-12 w-auto">
             </div>
 
             <!-- Copyright -->

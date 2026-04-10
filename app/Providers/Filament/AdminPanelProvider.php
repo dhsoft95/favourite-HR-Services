@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 'secondary' => '#151457',
             ])
             ->brandLogo(asset('images/logo/logo.png'))
-            ->darkModeBrandLogo(asset('images/logo/HR-Logo-White.png'))
+            ->darkModeBrandLogo(asset('images/logo/logo-white.png'))
             ->brandLogoHeight('3rem')
             ->favicon(asset('images/favicon.png'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')

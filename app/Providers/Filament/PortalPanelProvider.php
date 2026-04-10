@@ -44,7 +44,7 @@ class PortalPanelProvider extends PanelProvider
                 'info' => Color::Blue,
             ])
             ->brandLogo(asset('images/logo/logo.png'))
-            ->darkModeBrandLogo(asset('images/logo/HR-Logo-White.png'))
+            ->darkModeBrandLogo(asset('images/logo/logo-white.png'))
             ->brandLogoHeight('4rem')
             ->favicon(asset('images/favicon.png'))
             ->brandName('HR Portal')
