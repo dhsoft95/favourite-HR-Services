@@ -116,13 +116,9 @@ class UserResource extends Resource
                             ->label('System Role')
                             ->relationship('roles', 'name')
                             ->options(function () {
-                                   if (auth()->user()->hasRole('super_admin')) {
-                                    return [
-                                        'super_admin' => 'Super Administrator',
-                                        'hr_manager' => 'HR Manager',
-                                        'shortlister' => 'Shortlister',
-                                        'reviewer' => 'Reviewer',
-                                    ];
+                                if (auth()->user()->hasRole('super_admin')) {
+                                    return Role::whereIn('name', ['super_admin', 'hr_manager', 'shortlister', 'reviewer'])
+                                        ->pluck('name', 'id');
                                 }
                                 return [];
                             })
