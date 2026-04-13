@@ -473,7 +473,6 @@ class UserResource extends Resource
                                         'admin' => 'Administrator',
                                         'user' => 'Job Seeker',
                                     }),
-
                                 Infolists\Components\TextEntry::make('roles.name')
                                     ->label('System Role')
                                     ->badge()
