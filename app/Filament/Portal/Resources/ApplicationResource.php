@@ -124,85 +124,98 @@ class ApplicationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query
+                ->with([
+                    'user:id,name,email,phone',
+                    'job:id,title,company_name,job_type',
+                ])
+                ->where('status', '!=', 'rejected')
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('Applicant Name')
+                    ->label('Applicant')
                     ->searchable()
                     ->sortable()
-                    ->weight('medium')
+                    ->weight('semibold')
+                    ->size('sm')
+                    ->copyable()
                     ->description(fn (Application $record): string => $record->user->email),
 
                 Tables\Columns\TextColumn::make('user.phone')
                     ->label('Phone')
-                    ->icon('heroicon-o-phone')
                     ->searchable()
-                    ->toggleable(),
+                    ->size('sm')
+                    ->placeholder('N/A')
+                    ->description(fn (): string => 'Mobile')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('job.title')
                     ->label('Job Position')
                     ->searchable()
-                    ->weight('medium')
+                    ->weight('semibold')
+                    ->size('sm')
                     ->limit(40)
                     ->description(fn (Application $record): ?string => $record->job?->company_name),
 
-                Tables\Columns\BadgeColumn::make('job.job_type')
+                Tables\Columns\TextColumn::make('job.job_type')
                     ->label('Type')
-                    ->colors([
-                        'success' => 'Full Time',
-                        'warning' => 'Part Time',
-                        'info' => 'Remote',
-                        'gray' => 'Internship',
-                        'primary' => 'Contract',
-                    ])
-                    ->toggleable(),
+                    ->badge()
+                    ->size('sm')
+                    ->color(fn (string $state): string => match ($state) {
+                        'Full Time'  => 'success',
+                        'Part Time'  => 'warning',
+                        'Remote'     => 'info',
+                        'Internship' => 'gray',
+                        'Contract'   => 'primary',
+                        default      => 'gray',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->label('Status')
-                    ->colors([
-                        'secondary' => 'pending',
-                        'warning' => 'reviewing',
-                        'purple' => 'profiled',
-                        'info' => 'shortlisted',
-                        'primary' => 'interview',
-                        'success' => 'accepted',
-                        'danger' => 'rejected',
-                    ])
-                    ->icons([
-                        'heroicon-o-clock' => 'pending',
-                        'heroicon-o-eye' => 'reviewing',
-                        'heroicon-o-user-circle' => 'profiled',
-                        'heroicon-o-star' => 'shortlisted',
-                        'heroicon-o-calendar' => 'interview',
-                        'heroicon-o-check-circle' => 'accepted',
-                        'heroicon-o-x-circle' => 'rejected',
-                    ])
+                    ->badge()
+                    ->size('sm')
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending'     => 'gray',
+                        'reviewing'   => 'warning',
+                        'profiled'    => 'purple',
+                        'shortlisted' => 'info',
+                        'interview'   => 'primary',
+                        'accepted'    => 'success',
+                        'rejected'    => 'danger',
+                        default       => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending'     => 'Pending',
+                        'reviewing'   => 'Under Review',
+                        'profiled'    => 'Profile Review',
+                        'shortlisted' => 'Shortlisted',
+                        'interview'   => 'Interview',
+                        'accepted'    => 'Accepted',
+                        'rejected'    => 'Rejected',
+                        default       => ucfirst($state),
+                    })
+                    ->description(fn (Application $record): string => $record->created_at->diffForHumans())
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Applied On')
-                    ->date('M d, Y')
+                    ->date('d M Y')
+                    ->size('sm')
                     ->sortable()
-                    ->description(fn (Application $record): string => $record->created_at->diffForHumans()),
+                    ->placeholder('N/A'),
 
-                Tables\Columns\TextColumn::make('cv_path')
-                    ->label('CV')
-                    ->formatStateUsing(fn () => 'Download')
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->color('primary')
-                    ->url(fn (Application $record): string => Storage::url($record->cv_path))
-                    ->openUrlInNewTab()
-                    ->toggleable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'pending' => 'Pending Review',
-                        'reviewing' => 'Under Review',
-                        'profiled' => 'Profile Review',
+                        'pending'     => 'Pending Review',
+                        'reviewing'   => 'Under Review',
+                        'profiled'    => 'Profile Review',
                         'shortlisted' => 'Shortlisted',
-                        'interview' => 'Interview Scheduled',
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
+                        'interview'   => 'Interview Scheduled',
+                        'accepted'    => 'Accepted',
+                        'rejected'    => 'Rejected',
                     ])
                     ->multiple()
                     ->label('Application Status'),
@@ -217,20 +230,23 @@ class ApplicationResource extends Resource
                 Tables\Filters\SelectFilter::make('job.job_type')
                     ->label('Job Type')
                     ->options([
-                        'Full Time' => 'Full Time',
-                        'Part Time' => 'Part Time',
-                        'Remote' => 'Remote',
+                        'Full Time'  => 'Full Time',
+                        'Part Time'  => 'Part Time',
+                        'Remote'     => 'Remote',
                         'Internship' => 'Internship',
-                        'Contract' => 'Contract',
+                        'Contract'   => 'Contract',
                     ])
                     ->multiple(),
 
                 Tables\Filters\Filter::make('created_at')
+                    ->label('Applied Date')
                     ->form([
                         Forms\Components\DatePicker::make('applied_from')
-                            ->label('Applied From'),
+                            ->label('From')
+                            ->native(false),
                         Forms\Components\DatePicker::make('applied_until')
-                            ->label('Applied Until'),
+                            ->label('Until')
+                            ->native(false),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -242,207 +258,218 @@ class ApplicationResource extends Resource
                                 $data['applied_until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['applied_from'] ?? null) {
+                            $indicators[] = 'From: ' . \Carbon\Carbon::parse($data['applied_from'])->format('d M Y');
+                        }
+                        if ($data['applied_until'] ?? null) {
+                            $indicators[] = 'Until: ' . \Carbon\Carbon::parse($data['applied_until'])->format('d M Y');
+                        }
+                        return $indicators;
                     }),
             ])
-            ->actions([
-                Tables\Actions\Action::make('profile')
-                    ->icon('heroicon-o-user-circle')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->modalHeading('Profile for Review')
-                    ->modalDescription('Move this application to profile review stage. The candidate will be notified.')
-                    ->action(function (Application $record) {
-                        try {
-                            $oldStatus = $record->status;
-                            $record->update(['status' => 'profiled']);
+            ->Actions([
+                Tables\Actions\ActionGroup::make([
+                        Tables\Actions\Action::make('download_cv')
+                            ->label('Download CV')
+                            ->icon('heroicon-o-document-arrow-down')
+                            ->color('primary')
+                            ->url(fn (Application $record): string => Storage::url($record->cv_path))
+                            ->openUrlInNewTab(),
 
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
+                    Tables\Actions\Action::make('profile')
+                        ->icon('heroicon-o-user-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading('Move to Profile Review')
+                        ->modalDescription('Move this application to profile review stage. The candidate will be notified.')
+                        ->action(function (Application $record) {
+                            try {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'profiled']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
 
-                            Notification::make()
-                                ->success()
-                                ->title('Application Moved to Profile Review')
-                                ->body($record->user->name . ' has been moved to profile review stage.')
-                                ->send();
+                                Notification::make()
+                                    ->success()
+                                    ->title('Application Moved to Profile Review')
+                                    ->body($record->user->name . ' has been moved to profile review stage.')
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Error')
+                                    ->body('Failed to move to profile review: ' . $e->getMessage())
+                                    ->send();
+                                \Log::error('Profile review error: ' . $e->getMessage());
+                            }
+                        })
+                        ->visible(fn (Application $record): bool =>
+                            in_array($record->status, ['pending', 'reviewing']) &&
+                            auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
+                        ),
 
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Error')
-                                ->body('Failed to move to profile review: ' . $e->getMessage())
-                                ->send();
+                    Tables\Actions\Action::make('shortlist')
+                        ->icon('heroicon-o-star')
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->action(function (Application $record) {
+                            try {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'shortlisted']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
 
-                            \Log::error('Profile review error: ' . $e->getMessage());
-                        }
-                    })
-                    ->visible(fn (Application $record): bool =>
-                        in_array($record->status, ['pending', 'reviewing']) &&
-                        auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
-                    ),
+                                Notification::make()
+                                    ->success()
+                                    ->title('Applicant Shortlisted')
+                                    ->body($record->user->name . ' has been shortlisted and notified via email.')
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Error')
+                                    ->body('Failed to shortlist application: ' . $e->getMessage())
+                                    ->send();
+                                \Log::error('Shortlist error: ' . $e->getMessage());
+                            }
+                        })
+                        ->visible(fn (Application $record): bool =>
+                            $record->status === 'profiled' &&
+                            auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])
+                        ),
 
-                Tables\Actions\Action::make('shortlist')
-                    ->icon('heroicon-o-star')
-                    ->color('info')
-                    ->requiresConfirmation()
-                    ->action(function (Application $record) {
-                        try {
-                            $oldStatus = $record->status;
-                            $record->update(['status' => 'shortlisted']);
+                    Tables\Actions\Action::make('schedule_interview')
+                        ->icon('heroicon-o-calendar')
+                        ->color('primary')
+                        ->form([
+                            Forms\Components\Section::make('Interview Details')
+                                ->description('Schedule interview and provide instructions to the candidate')
+                                ->schema([
+                                    Forms\Components\Select::make('interview_type')
+                                        ->label('Interview Type')
+                                        ->options([
+                                            'internal' => 'Internal Interview (Favorite HR Services)',
+                                            'external' => 'External Interview (Client Interview)',
+                                        ])
+                                        ->required()
+                                        ->native(false)
+                                        ->helperText('Choose whether this is an internal HR interview or client interview')
+                                        ->columnSpanFull(),
 
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
+                                    Forms\Components\Textarea::make('interview_instructions')
+                                        ->label('Interview Instructions')
+                                        ->placeholder('Provide interview details, date/time, location, what to bring, meeting link, etc.')
+                                        ->rows(6)
+                                        ->required()
+                                        ->helperText('These instructions will be sent to the candidate via email')
+                                        ->columnSpanFull(),
 
-                            Notification::make()
-                                ->success()
-                                ->title('Applicant Shortlisted')
-                                ->body($record->user->name . ' has been shortlisted and notified via email.')
-                                ->send();
+                                    Forms\Components\DateTimePicker::make('interview_date')
+                                        ->label('Interview Date & Time')
+                                        ->required()
+                                        ->native(false)
+                                        ->displayFormat('F d, Y \a\t h:i A')
+                                        ->minDate(now())
+                                        ->helperText('Select the interview date and time')
+                                        ->columnSpanFull(),
+                                ])
+                        ])
+                        ->action(function (Application $record, array $data) {
+                            try {
+                                $record->update([
+                                    'status'                  => 'interview',
+                                    'interview_type'          => $data['interview_type'],
+                                    'interview_instructions'  => $data['interview_instructions'],
+                                    'interview_date'          => $data['interview_date'],
+                                ]);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $data));
 
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Error')
-                                ->body('Failed to shortlist application: ' . $e->getMessage())
-                                ->send();
+                                $label = $data['interview_type'] === 'internal' ? 'Internal Interview' : 'Client Interview';
+                                Notification::make()
+                                    ->success()
+                                    ->title('Interview Scheduled')
+                                    ->body($record->user->name . ' has been notified about the ' . $label)
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Error')
+                                    ->body('Failed to schedule interview: ' . $e->getMessage())
+                                    ->send();
+                                \Log::error('Interview scheduling error: ' . $e->getMessage());
+                            }
+                        })
+                        ->visible(fn (Application $record): bool =>
+                            $record->status === 'shortlisted' &&
+                            auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
+                        ),
 
-                            \Log::error('Shortlist error: ' . $e->getMessage());
-                        }
-                    })
-                    ->visible(fn (Application $record): bool =>
-                        $record->status === 'profiled' &&
-                        auth()->user()->hasAnyRole(['shortlister', 'hr_manager', 'super_admin'])
-                    ),
-                Tables\Actions\Action::make('schedule_interview')
-                    ->icon('heroicon-o-calendar')
-                    ->color('primary')
-                    ->form([
-                        Forms\Components\Section::make('Interview Details')
-                            ->description('Schedule interview and provide instructions to the candidate')
-                            ->schema([
-                                Forms\Components\Select::make('interview_type')
-                                    ->label('Interview Type')
-                                    ->options([
-                                        'internal' => 'Internal Interview (Favorite HR Services)',
-                                        'external' => 'External Interview (Client Interview)',
-                                    ])
-                                    ->required()
-                                    ->native(false)
-                                    ->helperText('Choose whether this is an internal HR interview or client interview')
-                                    ->columnSpanFull(),
+                    Tables\Actions\Action::make('accept')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading('Accept Application')
+                        ->modalDescription('Are you sure you want to accept this application? The candidate will be notified.')
+                        ->action(function (Application $record) {
+                            try {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'accepted']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
 
-                                Forms\Components\Textarea::make('interview_instructions')
-                                    ->label('Interview Instructions')
-                                    ->placeholder('Provide interview details, date/time, location, what to bring, meeting link, etc.')
-                                    ->rows(6)
-                                    ->required()
-                                    ->helperText('These instructions will be sent to the candidate via email')
-                                    ->columnSpanFull(),
+                                Notification::make()
+                                    ->success()
+                                    ->title('Application Accepted')
+                                    ->body('Congratulations! ' . $record->user->name . ' has been accepted and notified.')
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Error')
+                                    ->body('Failed to accept application: ' . $e->getMessage())
+                                    ->send();
+                            }
+                        })
+                        ->visible(fn (Application $record): bool =>
+                            in_array($record->status, ['shortlisted', 'interview']) &&
+                            auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
+                        ),
 
-                                Forms\Components\DateTimePicker::make('interview_date')
-                                    ->label('Interview Date & Time')
-                                    ->required()
-                                    ->native(false)
-                                    ->displayFormat('F d, Y \a\t h:i A')
-                                    ->minDate(now())
-                                    ->helperText('Select the interview date and time')
-                                    ->columnSpanFull(),
-                            ])
-                    ])
-                    ->action(function (Application $record, array $data) {
-                        try {
-                            $oldStatus = $record->status;
-                            $record->update([
-                                'status' => 'interview',
-                                'interview_type' => $data['interview_type'],
-                                'interview_instructions' => $data['interview_instructions'],
-                                'interview_date' => $data['interview_date'],
-                            ]);
+                    Tables\Actions\Action::make('reject')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading('Reject Application')
+                        ->modalDescription('Are you sure you want to reject this application? The candidate will be notified.')
+                        ->action(function (Application $record) {
+                            try {
+                                $oldStatus = $record->status;
+                                $record->update(['status' => 'rejected']);
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
 
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $data));
-
-                            $interviewTypeLabel = $data['interview_type'] === 'internal' ? 'Internal Interview' : 'Client Interview';
-                            Notification::make()
-                                ->success()
-                                ->title('Interview Scheduled')
-                                ->body($record->user->name . ' has been notified about the ' . $interviewTypeLabel)
-                                ->send();
-
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Error')
-                                ->body('Failed to schedule interview: ' . $e->getMessage())
-                                ->send();
-
-                            \Log::error('Interview scheduling error: ' . $e->getMessage());
-                        }
-                    })
-                    ->visible(fn (Application $record): bool =>
-                        $record->status === 'shortlisted' &&
-                        auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
-                    ),
-
-                Tables\Actions\Action::make('accept')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->modalHeading('Accept Application')
-                    ->modalDescription('Are you sure you want to accept this application? The candidate will be notified.')
-                    ->action(function (Application $record) {
-                        try {
-                            $oldStatus = $record->status;
-                            $record->update(['status' => 'accepted']);
-
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
-
-                            Notification::make()
-                                ->success()
-                                ->title('Application Accepted')
-                                ->body('Congratulations! ' . $record->user->name . ' has been accepted and notified.')
-                                ->send();
-
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Error')
-                                ->body('Failed to accept application: ' . $e->getMessage())
-                                ->send();
-                        }
-                    })
-                    ->visible(fn (Application $record): bool =>
-                        in_array($record->status, ['shortlisted', 'interview']) &&
-                        auth()->user()->hasAnyRole(['hr_manager', 'super_admin'])
-                    ),
-
-                Tables\Actions\Action::make('reject')
-                    ->icon('heroicon-o-x-circle')
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->modalHeading('Reject Application')
-                    ->modalDescription('Are you sure you want to reject this application? The candidate will be notified.')
-                    ->action(function (Application $record) {
-                        try {
-                            $oldStatus = $record->status;
-                            $record->update(['status' => 'rejected']);
-
-                            $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
-
-                            Notification::make()
-                                ->warning()
-                                ->title('Application Rejected')
-                                ->body($record->user->name . ' has been notified of the rejection.')
-                                ->send();
-
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Error')
-                                ->body('Failed to reject application: ' . $e->getMessage())
-                                ->send();
-                        }
-                    })
-                    ->visible(fn (Application $record): bool =>
-                        !in_array($record->status, ['accepted', 'rejected']) &&
-                        auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
-                    ),
+                                Notification::make()
+                                    ->warning()
+                                    ->title('Application Rejected')
+                                    ->body($record->user->name . ' has been notified of the rejection.')
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Error')
+                                    ->body('Failed to reject application: ' . $e->getMessage())
+                                    ->send();
+                            }
+                        })
+                        ->visible(fn (Application $record): bool =>
+                            !in_array($record->status, ['accepted', 'rejected']) &&
+                            auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
+                        ),
+                ])
+                    ->label('Actions')
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->size('sm')
+                    ->color('gray')
+                    ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -520,6 +547,8 @@ class ApplicationResource extends Resource
                         ->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ]),
             ])
+            ->defaultPaginationPageOption(25)
+            ->paginated([10, 25, 50, 100])
             ->defaultSort('created_at', 'desc')
             ->poll('30s')
             ->striped()
@@ -527,7 +556,6 @@ class ApplicationResource extends Resource
             ->emptyStateDescription('Applications will appear here once candidates start applying.')
             ->emptyStateIcon('heroicon-o-document-text');
     }
-
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
