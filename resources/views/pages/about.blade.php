@@ -42,6 +42,7 @@
                            text-align: center;">
             Who We Are
         </h2>
+
         <div class="flex justify-center px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <p class="text-gray-700 leading-relaxed mb-6 text-lg"
@@ -199,56 +200,27 @@
 
 
     <!-- Hero Section with Cover Image & Play Button -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden" style="margin-bottom:0px;">
-
-        <!-- Slider Background -->
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <div id="heroSlider" class="relative w-full h-full">
-
-                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-100">
-                    <img src="images/slider/slider01.webp" alt="Slide 1" class="w-full h-full object-cover object-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
-                </div>
-
-{{--                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">--}}
-{{--                    <img src="images/slider/slider03.webp" alt="Slide 2" class="w-full h-full object-cover object-center">--}}
-{{--                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>--}}
-{{--                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>--}}
-{{--                </div>--}}
-
-                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
-                    <img src="images/slider/slider02.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
-                </div>
-                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
-                    <img src="images/slider/slider04.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
-                </div>
-                <div class="slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0">
-                    <img src="images/slider/slider05.webp" alt="Slide 3" class="w-full h-full object-cover object-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
-                </div>
-            </div>
+            <video autoplay muted loop playsinline
+                   class="w-full h-full object-cover object-center">
+                <source src="{{ asset('images/Hero/Favorite_Service.mp4') }}" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-gray-900/40 to-gray-900/50"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gray-900/20"></div>
         </div>
 
-        <!-- Prev / Next Arrows -->
-        <button id="prevSlide"
-                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/40 transition-all duration-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-        </button>
-
-        <button id="nextSlide"
-                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/40 transition-all duration-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-        </button>
+        <!-- Play Button Center -->
+        <div class="relative z-10 flex items-center justify-center">
+            <button id="playButton"
+                    class="w-20 h-20 rounded-full border-2 border-white/80 bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-all duration-300 group">
+                <svg class="w-8 h-8 text-white ml-1 group-hover:scale-110 transition-transform duration-300"
+                     fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
+        </div>
 
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
@@ -262,6 +234,25 @@
         </div>
     </section>
 
+    <!-- Video Modal -->
+    <div id="videoModal" class="hidden fixed inset-0 z-50 bg-black/80 items-center justify-center">
+        <div class="relative w-full max-w-4xl mx-4">
+            <button id="closeModal"
+                    class="absolute -top-10 right-0 text-white/80 hover:text-white transition-colors duration-200">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="relative pt-[56.25%]">
+                <iframe id="videoPlayer"
+                        class="absolute inset-0 w-full h-full rounded-xl"
+                        frameborder="0"
+                        allow="autoplay; fullscreen"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
     <script>
         const slides = document.querySelectorAll('.slide');
         let current  = 0;

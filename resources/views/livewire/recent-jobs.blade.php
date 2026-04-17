@@ -1,227 +1,218 @@
-<!-- Recent Jobs Slider Component -->
-<div>
-    <section class="py-16 lg:py-20" style="background: #F3F5F2;">
-        <div class="container-fluid px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-12 lg:mb-16">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6" style="color: #151457; font-family: Inter,sans-serif" >
-                    Explore Recent Job Openings
-                </h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Discover the latest career opportunities from top companies
-                </p>
-            </div>
+<section class="py-16 lg:py-20" style="background: #F3F5F2;">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-12 lg:mb-16">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style="color: #151457; font-family: Inter, sans-serif;">
+                Explore Recent Job Openings
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Discover the latest career opportunities from top companies
+            </p>
+        </div>
 
-            @if($jobs->count() > 0)
-                <!-- Job Cards Carousel -->
-                <div class="relative">
-                    <!-- Previous Button -->
-                    <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm" style="hover:border-color: #151457; hover:color: #151457;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
+        @if($jobs->count() > 0)
+            <div class="relative px-10">
+                <button id="prevBtn" class="job-nav-btn absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
 
-                    <!-- Cards Container -->
-                    <div class="overflow-hidden">
-                        <div id="jobsSlider" class="flex transition-transform duration-300 ease-in-out">
-                            @foreach($jobs as $job)
-                                <!-- Job Card -->
-                                <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0 px-3">
-                                    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                                        <!-- Job Image -->
-                                        <div class="h-48 bg-gray-200 overflow-hidden">
-                                            @if($job->image)
-                                                <img src="{{ asset('storage/' . $job->image) }}"
-                                                     alt="{{ $job->title }}"
-                                                     class="w-full h-full object-cover">
-                                            @else
-                                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-                                                    <i class="fas fa-briefcase text-4xl text-gray-400"></i>
-                                                </div>
-                                            @endif
+                <div class="overflow-hidden">
+                    <div id="jobsTrack" class="flex transition-transform duration-300 ease-in-out">
+                        @foreach($jobs as $job)
+                            <div class="job-slide flex-shrink-0 px-3">
+                                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden h-full flex flex-col">
+                                    <div class="h-40 bg-gray-100 overflow-hidden flex-shrink-0">
+                                        @if($job->image)
+                                            <img src="{{ asset('storage/' . $job->image) }}"
+                                                 alt="{{ $job->title }}"
+                                                 class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center" style="background: #e8ecf7;">
+                                                <i class="fas fa-briefcase text-3xl" style="color: #151457; opacity: 0.3;"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="p-5 flex flex-col flex-1">
+                                        <h3 class="text-base font-semibold text-gray-900 mb-2 truncate">
+                                            {{ $job->title }}
+                                        </h3>
+
+                                        <span class="inline-block px-2 py-1 text-xs font-medium rounded mb-3 w-fit {{ $job->job_type === 'Full Time' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                            {{ $job->job_type }}
+                                        </span>
+
+                                        <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
+                                            {{ Str::limit(strip_tags($job->description), 100) }}
+                                        </p>
+
+                                        <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
+                                            <div class="flex items-center gap-1">
+                                                <i class="fas fa-map-marker-alt text-red-400"></i>
+                                                <span>{{ Str::limit($job->location, 20) }}</span>
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <i class="far fa-clock"></i>
+                                                <span>{{ $job->created_at->diffForHumans() }}</span>
+                                            </div>
                                         </div>
 
-                                        <!-- Card Content -->
-                                        <div class="p-6">
-                                            <!-- Job Title & Type -->
-                                            <div class="mb-3">
-                                                <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
-                                                    {{ $job->title }}
-                                                </h3>
-                                                <span class="inline-block px-2 py-1 text-xs font-medium rounded {{ $job->job_type === 'Full Time' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
-                                                    {{ $job->job_type }}
-                                                </span>
-                                            </div>
-
-                                            <!-- Job Description -->
-                                            <p class="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">
-                                                {{ Str::limit(strip_tags($job->description), 100) }}
-                                            </p>
-
-                                            <!-- Location and Date -->
-                                            <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
-                                                <div class="flex items-center">
-                                                    <i class="fas fa-map-marker-alt mr-1 text-red-500"></i>
-                                                    <span>{{ Str::limit($job->location, 20) }}</span>
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <i class="far fa-clock mr-1"></i>
-                                                    <span>{{ $job->created_at->diffForHumans() }}</span>
-                                                </div>
-                                            </div>
-
-                                            <!-- Action Button -->
-                                            <a href="{{ route('jobs-details', $job->id) }}" class="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200" style="background-color: #151457; hover:background-color: #0f1142;">
-                                                View Details
-                                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                </svg>
-                                            </a>
-                                        </div>
+                                        <a href="{{ route('jobs-details', $job->id) }}" class="job-view-btn inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg w-full">
+                                            View Details
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                            </svg>
+                                        </a>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
-
-                    <!-- Next Button -->
-                    <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm" style="hover:border-color: #151457; hover:color: #151457;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
                 </div>
 
-                <!-- Dots Indicator -->
-                @if($jobs->count() > 4)
-                    <div class="flex justify-center mt-8 space-x-2" id="dotsContainer">
-                        <!-- Dots will be generated by JavaScript based on job count -->
-                    </div>
-                @endif
+                <button id="nextBtn" class="job-nav-btn absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
 
-                <!-- View All Jobs Button -->
-                <div class="text-center mt-8">
-                    <a href="{{ route('jobs') }}"
-                       class="inline-flex items-center px-8 py-3 text-white font-semibold rounded-lg transition-colors duration-300" style="background-color: #151457; hover:background-color: #0f1142;">
-                        View All Jobs
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
-            @else
-                <!-- No Jobs Found -->
-                <div class="text-center py-12">
-                    <i class="fas fa-briefcase text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-2">No recent jobs available</h3>
-                    <p class="text-gray-500">Check back soon for new opportunities</p>
-                </div>
-            @endif
-        </div>
-    </section>
-</div>
+            <div class="flex justify-center mt-8 gap-2" id="dotsContainer"></div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const slider = document.getElementById('jobsSlider');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const dotsContainer = document.getElementById('dotsContainer');
+            <div class="text-center mt-8">
+                <a href="{{ route('jobs') }}" class="job-view-btn inline-flex items-center gap-2 px-8 py-3 text-white font-semibold rounded-lg">
+                    View All Jobs
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        @else
+            <div class="text-center py-12">
+                <i class="fas fa-briefcase text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No recent jobs available</h3>
+                <p class="text-gray-500">Check back soon for new opportunities</p>
+            </div>
+        @endif
+    </div>
 
-        if (!slider) return;
+    <style>
+        .job-nav-btn {
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .job-nav-btn:hover {
+            border-color: #151457;
+            color: #151457;
+        }
+        .job-view-btn {
+            background-color: #151457;
+            transition: background-color 0.2s;
+        }
+        .job-view-btn:hover {
+            background-color: #0f1142;
+        }
+        .job-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background-color 0.2s;
+        }
+        .job-dot.active {
+            background-color: #151457;
+        }
+    </style>
 
-        let currentSlide = 0;
-        let itemsPerView = 4; // Default for xl screens
-        const totalCards = {{ $jobs->count() }};
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const track = document.getElementById('jobsTrack');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dotsContainer = document.getElementById('dotsContainer');
 
-        // Create dots based on job count
-        function createDots() {
-            if (!dotsContainer || totalCards <= itemsPerView) return;
+            if (!track) return;
 
-            const maxSlides = Math.max(0, totalCards - itemsPerView);
-            dotsContainer.innerHTML = '';
+            const slides = track.querySelectorAll('.job-slide');
+            const total = slides.length;
+            let current = 0;
+            let perView = 4;
+            let autoTimer;
 
-            for (let i = 0; i <= maxSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = `w-3 h-3 rounded-full dot-indicator transition-colors duration-200 ${i === 0 ? 'bg-indigo-900' : 'bg-gray-300'}`;
-                dot.setAttribute('data-slide', i);
-                dot.addEventListener('click', () => {
-                    currentSlide = i;
-                    updateSlider();
+            function getPerView() {
+                const w = window.innerWidth;
+                if (w < 768) return 1;
+                if (w < 1024) return 2;
+                if (w < 1280) return 3;
+                return 4;
+            }
+
+            function setSlideWidths() {
+                slides.forEach(slide => {
+                    slide.style.width = (100 / perView) + '%';
                 });
-                dotsContainer.appendChild(dot);
             }
-        }
 
-        // Update items per view based on screen size
-        function updateItemsPerView() {
-            if (window.innerWidth < 768) {
-                itemsPerView = 1;
-            } else if (window.innerWidth < 1024) {
-                itemsPerView = 2;
-            } else if (window.innerWidth < 1280) {
-                itemsPerView = 3;
-            } else {
-                itemsPerView = 4;
+            function maxSlide() {
+                return Math.max(0, total - perView);
             }
-        }
 
-        // Update slider position
-        function updateSlider() {
-            const slideWidth = 100 / itemsPerView;
-            const translateX = -currentSlide * slideWidth;
-            slider.style.transform = `translateX(${translateX}%)`;
-
-            // Update dots
-            const dots = document.querySelectorAll('.dot-indicator');
-            dots.forEach((dot, index) => {
-                if (index === currentSlide) {
-                    dot.style.backgroundColor = '#151457';
-                } else {
-                    dot.style.backgroundColor = '#d1d5db';
+            function renderDots() {
+                dotsContainer.innerHTML = '';
+                const count = maxSlide() + 1;
+                if (count <= 1) return;
+                for (let i = 0; i < count; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'job-dot' + (i === current ? ' active' : '');
+                    btn.addEventListener('click', () => {
+                        current = i;
+                        update();
+                        restartAuto();
+                    });
+                    dotsContainer.appendChild(btn);
                 }
+            }
+
+            function update() {
+                const pct = (100 / perView) * current;
+                track.style.transform = `translateX(-${pct}%)`;
+                document.querySelectorAll('.job-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === current);
+                });
+            }
+
+            function go(dir) {
+                if (dir === 1) {
+                    current = current >= maxSlide() ? 0 : current + 1;
+                } else {
+                    current = current <= 0 ? maxSlide() : current - 1;
+                }
+                update();
+            }
+
+            function restartAuto() {
+                clearInterval(autoTimer);
+                autoTimer = setInterval(() => go(1), 5000);
+            }
+
+            prevBtn.addEventListener('click', () => { go(-1); restartAuto(); });
+            nextBtn.addEventListener('click', () => { go(1); restartAuto(); });
+
+            window.addEventListener('resize', () => {
+                perView = getPerView();
+                current = 0;
+                setSlideWidths();
+                renderDots();
+                update();
             });
-        }
 
-        // Next slide
-        function nextSlide() {
-            const maxSlides = Math.max(0, totalCards - itemsPerView);
-            if (currentSlide < maxSlides) {
-                currentSlide++;
-            } else {
-                currentSlide = 0;
-            }
-            updateSlider();
-        }
-
-        // Previous slide
-        function prevSlide() {
-            const maxSlides = Math.max(0, totalCards - itemsPerView);
-            if (currentSlide > 0) {
-                currentSlide--;
-            } else {
-                currentSlide = maxSlides;
-            }
-            updateSlider();
-        }
-
-        // Event listeners
-        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-
-        // Auto-play
-        setInterval(nextSlide, 5000);
-
-        // Handle resize
-        window.addEventListener('resize', () => {
-            updateItemsPerView();
-            currentSlide = 0;
-            createDots();
-            updateSlider();
+            perView = getPerView();
+            setSlideWidths();
+            renderDots();
+            update();
+            restartAuto();
         });
-
-        // Initialize
-        updateItemsPerView();
-        createDots();
-        updateSlider();
-    });
-</script>
+    </script>
+</section>
