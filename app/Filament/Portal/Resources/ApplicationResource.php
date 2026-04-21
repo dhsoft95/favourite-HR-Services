@@ -24,6 +24,7 @@ class ApplicationResource extends Resource
     protected static ?string $navigationLabel = 'Applications';
     protected static ?string $navigationGroup = 'Job Management';
     protected static ?string $recordTitleAttribute = 'user.name';
+
     public static function canCreate(): bool
     {
         return auth()->user()->hasAnyRole(['super_admin', 'hr_manager']);
@@ -88,7 +89,7 @@ class ApplicationResource extends Resource
                             ->acceptedFileTypes([
                                 'application/pdf',
                                 'application/msword',
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                             ])
                             ->maxSize(5120)
                             ->required()
@@ -104,13 +105,13 @@ class ApplicationResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('status')
                             ->options([
-                                'pending' => 'Pending Review',
-                                'reviewing' => 'Under Review',
-                                'profiled' => 'Profile Review',
+                                'pending'     => 'Pending Review',
+                                'reviewing'   => 'Under Review',
+                                'profiled'    => 'Profile Review',
                                 'shortlisted' => 'Shortlisted',
-                                'interview' => 'Interview Scheduled',
-                                'accepted' => 'Accepted',
-                                'rejected' => 'Rejected',
+                                'interview'   => 'Interview Scheduled',
+                                'accepted'    => 'Accepted',
+                                'rejected'    => 'Rejected',
                             ])
                             ->default('pending')
                             ->required()
@@ -204,7 +205,6 @@ class ApplicationResource extends Resource
                     ->size('sm')
                     ->sortable()
                     ->placeholder('N/A'),
-
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -270,14 +270,14 @@ class ApplicationResource extends Resource
                         return $indicators;
                     }),
             ])
-            ->Actions([
+            ->actions([
                 Tables\Actions\ActionGroup::make([
-                        Tables\Actions\Action::make('download_cv')
-                            ->label('Download CV')
-                            ->icon('heroicon-o-document-arrow-down')
-                            ->color('primary')
-                            ->url(fn (Application $record): string => Storage::url($record->cv_path))
-                            ->openUrlInNewTab(),
+                    Tables\Actions\Action::make('download_cv')
+                        ->label('Download CV')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('primary')
+                        ->url(fn (Application $record): string => Storage::url($record->cv_path))
+                        ->openUrlInNewTab(),
 
                     Tables\Actions\Action::make('profile')
                         ->icon('heroicon-o-user-circle')
@@ -373,15 +373,15 @@ class ApplicationResource extends Resource
                                         ->minDate(now())
                                         ->helperText('Select the interview date and time')
                                         ->columnSpanFull(),
-                                ])
+                                ]),
                         ])
                         ->action(function (Application $record, array $data) {
                             try {
                                 $record->update([
-                                    'status'                  => 'interview',
-                                    'interview_type'          => $data['interview_type'],
-                                    'interview_instructions'  => $data['interview_instructions'],
-                                    'interview_date'          => $data['interview_date'],
+                                    'status'                 => 'interview',
+                                    'interview_type'         => $data['interview_type'],
+                                    'interview_instructions' => $data['interview_instructions'],
+                                    'interview_date'         => $data['interview_date'],
                                 ]);
                                 $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $data));
 
@@ -415,7 +415,7 @@ class ApplicationResource extends Resource
                             try {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'accepted']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
 
                                 Notification::make()
                                     ->success()
@@ -445,7 +445,7 @@ class ApplicationResource extends Resource
                             try {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'rejected']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
 
                                 Notification::make()
                                     ->warning()
@@ -461,7 +461,7 @@ class ApplicationResource extends Resource
                             }
                         })
                         ->visible(fn (Application $record): bool =>
-                            !in_array($record->status, ['accepted', 'rejected']) &&
+                            ! in_array($record->status, ['accepted', 'rejected']) &&
                             auth()->user()->hasAnyRole(['reviewer', 'hr_manager', 'super_admin'])
                         ),
                 ])
@@ -481,7 +481,7 @@ class ApplicationResource extends Resource
                             foreach ($records as $record) {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'reviewing']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
                             }
                         })
                         ->deselectRecordsAfterCompletion()
@@ -495,7 +495,7 @@ class ApplicationResource extends Resource
                             foreach ($records as $record) {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'profiled']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
                             }
                         })
                         ->deselectRecordsAfterCompletion()
@@ -509,7 +509,7 @@ class ApplicationResource extends Resource
                             foreach ($records as $record) {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'shortlisted']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
                             }
                         })
                         ->deselectRecordsAfterCompletion()
@@ -523,7 +523,7 @@ class ApplicationResource extends Resource
                             foreach ($records as $record) {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'accepted']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
                             }
                         })
                         ->deselectRecordsAfterCompletion()
@@ -537,7 +537,7 @@ class ApplicationResource extends Resource
                             foreach ($records as $record) {
                                 $oldStatus = $record->status;
                                 $record->update(['status' => 'rejected']);
-                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, $oldStatus));
+                                $record->user->notify(new \App\Notifications\ApplicationStatusChanged($record, ['old_status' => $oldStatus]));
                             }
                         })
                         ->deselectRecordsAfterCompletion()
@@ -556,6 +556,7 @@ class ApplicationResource extends Resource
             ->emptyStateDescription('Applications will appear here once candidates start applying.')
             ->emptyStateIcon('heroicon-o-document-text');
     }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -595,13 +596,14 @@ class ApplicationResource extends Resource
                                     ->badge()
                                     ->size(Infolists\Components\TextEntry\TextEntrySize::Large)
                                     ->color(fn (string $state): string => match ($state) {
-                                        'pending' => 'secondary',
-                                        'reviewing' => 'warning',
-                                        'profiled' => 'purple',
+                                        'pending'     => 'secondary',
+                                        'reviewing'   => 'warning',
+                                        'profiled'    => 'purple',
                                         'shortlisted' => 'info',
-                                        'interview' => 'primary',
-                                        'accepted' => 'success',
-                                        'rejected' => 'danger',
+                                        'interview'   => 'primary',
+                                        'accepted'    => 'success',
+                                        'rejected'    => 'danger',
+                                        default       => 'gray',
                                     }),
 
                                 Infolists\Components\TextEntry::make('created_at')
@@ -633,16 +635,18 @@ class ApplicationResource extends Resource
                             ->label('Employment Type')
                             ->badge()
                             ->color(fn (string $state): string => match ($state) {
-                                'Full Time' => 'success',
-                                'Part Time' => 'warning',
-                                'Remote' => 'info',
+                                'Full Time'  => 'success',
+                                'Part Time'  => 'warning',
+                                'Remote'     => 'info',
                                 'Internship' => 'gray',
-                                'Contract' => 'primary',
+                                'Contract'   => 'primary',
+                                default      => 'gray',
                             }),
 
                         Infolists\Components\TextEntry::make('job.category.name')
                             ->label('Category')
                             ->badge(),
+
                         Infolists\Components\TextEntry::make('job.location')
                             ->label('Location')
                             ->icon('heroicon-o-map-pin'),
@@ -690,18 +694,16 @@ class ApplicationResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListApplications::route('/'),
+            'index'  => Pages\ListApplications::route('/'),
             'create' => Pages\CreateApplication::route('/create'),
-            'view' => Pages\ViewApplication::route('/{record}'),
-            'edit' => Pages\EditApplication::route('/{record}/edit'),
+            'view'   => Pages\ViewApplication::route('/{record}'),
+            'edit'   => Pages\EditApplication::route('/{record}/edit'),
         ];
     }
 
@@ -709,6 +711,7 @@ class ApplicationResource extends Resource
     {
         return static::getModel()::where('status', 'pending')->count();
     }
+
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';
