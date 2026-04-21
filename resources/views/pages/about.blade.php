@@ -339,7 +339,7 @@
         <div class="absolute inset-0 z-0">
             <video id="bgVideo" autoplay muted loop playsinline
                    class="w-full h-full object-cover object-center">
-                <source src="{{ asset('images/Hero/video.mp4') }}" type="video/mp4">
+                <source src="{{ asset('images/Hero/Favorite_Service.mp4') }}" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-r from-[#312e81]/80 via-black/40 to-[#312e81]/60"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-[#312e81]/30"></div>
