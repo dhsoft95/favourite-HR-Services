@@ -364,17 +364,6 @@
             </div>
 
             {{-- Headline --}}
-            <h1 class="anim-up delay-2 text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.05] font-bold"
-                style="font-family:'Inter',sans-serif; letter-spacing:-0.02em;">
-                Your Career,<br>
-                <span style="color: #ef4444;">Our Mission</span>
-            </h1>
-
-            {{-- Subtitle --}}
-            <p class="anim-up delay-3 text-base md:text-lg text-white/60 mb-12 max-w-xl mx-auto leading-relaxed"
-               style="font-family:'Inter',sans-serif; font-weight:300; letter-spacing:0.02em;">
-                Connecting exceptional talent with extraordinary opportunities across East Africa and beyond.
-            </p>
 
             {{-- CTA row --}}
             <div class="anim-up delay-4 flex flex-col sm:flex-row items-center justify-center gap-8 mb-20">
@@ -404,37 +393,37 @@
                 <div class="hidden sm:block w-px h-12 bg-white/10"></div>
 
                 {{-- Explore services --}}
-                <a href="#services"
-                   class="group flex items-center gap-3 text-white/50 hover:text-red-400 transition-colors duration-300"
-                   style="font-family:'Inter',sans-serif; font-weight:300; letter-spacing:0.1em; font-size:0.75rem; text-transform:uppercase;">
-                    Explore Services
-                    <span class="w-6 h-px bg-current transition-all duration-300 group-hover:w-10"></span>
-                </a>
+{{--                <a href="#services"--}}
+{{--                   class="group flex items-center gap-3 text-white/50 hover:text-red-400 transition-colors duration-300"--}}
+{{--                   style="font-family:'Inter',sans-serif; font-weight:300; letter-spacing:0.1em; font-size:0.75rem; text-transform:uppercase;">--}}
+{{--                    Explore Services--}}
+{{--                    <span class="w-6 h-px bg-current transition-all duration-300 group-hover:w-10"></span>--}}
+{{--                </a>--}}
             </div>
 
             {{-- Stats row --}}
-            <div class="anim-up delay-5 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto">
-                @php
-                    $stats = [
-                        ['value' => '500+', 'label' => 'Placements'],
-                        ['value' => '12+',  'label' => 'Years Active'],
-                        ['value' => '98%',  'label' => 'Client Satisfaction'],
-                        ['value' => '50+',  'label' => 'Partner Companies'],
-                    ];
-                @endphp
-                @foreach($stats as $stat)
-                    <div class="stat-card">
-                        <div class="text-2xl md:text-3xl font-bold mb-1 text-red-400"
-                             style="font-family:'Inter',sans-serif;">
-                            {{ $stat['value'] }}
-                        </div>
-                        <div class="text-white/45 text-[10px] tracking-[0.2em] uppercase"
-                             style="font-family:'Inter',sans-serif; font-weight:300;">
-                            {{ $stat['label'] }}
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+{{--            <div class="anim-up delay-5 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto">--}}
+{{--                @php--}}
+{{--                    $stats = [--}}
+{{--                        ['value' => '500+', 'label' => 'Placements'],--}}
+{{--                        ['value' => '12+',  'label' => 'Years Active'],--}}
+{{--                        ['value' => '98%',  'label' => 'Client Satisfaction'],--}}
+{{--                        ['value' => '50+',  'label' => 'Partner Companies'],--}}
+{{--                    ];--}}
+{{--                @endphp--}}
+{{--                @foreach($stats as $stat)--}}
+{{--                    <div class="stat-card">--}}
+{{--                        <div class="text-2xl md:text-3xl font-bold mb-1 text-red-400"--}}
+{{--                             style="font-family:'Inter',sans-serif;">--}}
+{{--                            {{ $stat['value'] }}--}}
+{{--                        </div>--}}
+{{--                        <div class="text-white/45 text-[10px] tracking-[0.2em] uppercase"--}}
+{{--                             style="font-family:'Inter',sans-serif; font-weight:300;">--}}
+{{--                            {{ $stat['label'] }}--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                @endforeach--}}
+{{--            </div>--}}
         </div>
 
         {{-- Scroll indicator --}}
